@@ -80,7 +80,7 @@ bintray {
     key = project.hasProperty('bintrayKey') ? project.property('bintrayKey') : System.getenv('BINTRAY_KEY')
     filesSpec {
         from 'build/distributions'
-        into '/'
+        into '.'
     }
     pkg {
         repo = 'nomic-repo'
