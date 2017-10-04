@@ -78,6 +78,7 @@ installDist.dependsOn shadowJar
 bintray {
     user = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER')
     key = project.hasProperty('bintrayKey') ? project.property('bintrayKey') : System.getenv('BINTRAY_KEY')
+    publish = true
     filesSpec {
         from 'build/distributions'
         into '.'
