@@ -1,6 +1,7 @@
 apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'distribution'
 apply plugin: 'nebula.ospackage'
+apply plugin: 'com.jfrog.bintray'
 
 jar {
     manifest {
@@ -29,6 +30,14 @@ distributions {
             }
         }
     }
+}
+
+distZip {
+    archiveName baseName+'-'+version+'-bin.zip'
+}
+
+distTar {
+    archiveName baseName+'-'+version+'-bin.tar'
 }
 
 
@@ -62,5 +71,27 @@ ospackage {
     link("/usr/bin/nomicDebug", "/usr/share/nomic/bin/nomicDebug")
 }
 
-assemble.dependsOn buildRpm, buildDeb
+assemble.dependsOn buildRpm, buildDeb, distZip, distTar
 installDist.dependsOn shadowJar
+
+
+bintray {
+    user = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER')
+    key = project.hasProperty('bintrayKey') ? project.property('bintrayKey') : System.getenv('BINTRAY_KEY')
+    filesSpec {
+        from 'build/distributions'
+        into '/'
+    }
+    pkg {
+        repo = 'nomic-repo'
+        name = 'nomic-app'
+        licenses = ['Apache-2.0']
+        vcsUrl = 'https://github.com/sn3d/nomic.git'
+        websiteUrl = "https://github.com/sn3d/"
+        issueTrackerUrl = 'https://github.com/sn3d/nomic/issues'
+        version {
+            name = project.version
+            released = new Date()
+        }
+    }
+}

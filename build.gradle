@@ -13,11 +13,12 @@ buildscript {
 		classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.1'
 		classpath 'com.netflix.nebula:gradle-ospackage-plugin:4.4.2'
 		classpath "org.jetbrains.dokka:dokka-gradle-plugin:${dokka_version}"
+		classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
 	}
 }
 
 allprojects { project ->
-	group = "com.wirecard"
+	group = "org.zdevra"
 	version = version
 
 	repositories {
@@ -143,4 +144,3 @@ project('nomic-dist') {
 		compile project(':nomic-app')
 	}
 }
-
