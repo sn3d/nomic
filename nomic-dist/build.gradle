@@ -33,14 +33,10 @@ distributions {
 
 
 ospackage {
-    packageName = 'wd-nomic'
+    packageName = 'nomic'
     version = '1.0.0'
     release = '1'
     os = LINUX
-    user = "hdfs"
-    permissionGroup = "hdfs"
-
-    requires "wd-jdk8"
 
     from("src/bin") {
         fileMode 0740
