@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 if [ "$TRAVIS_BRANCH" == "master" ]; then
     echo -e 'Releasing branch:$['$TRAVIS_BRANCH'] tag: ['$TRAVIS_TAG']'
     ./gradlew build test
@@ -13,6 +12,6 @@ if [ "$TRAVIS_BRANCH" == "master" ]; then
         ;;
     esac
 else
-    echo -e 'Building and testing  branch:$['$TRAVIS_BRANCH']'
+    echo -e 'Building and testing branch: ['$TRAVIS_BRANCH']'
     ./gradlew build test
 fi
