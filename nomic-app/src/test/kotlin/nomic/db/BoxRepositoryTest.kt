@@ -25,7 +25,7 @@ class BoxRepositoryTest {
         repository.save(box.info, box.descriptor);
 
         // check
-        Assert.assertTrue( hdfs.exist("/user/test/.nomic/repository/${box.info.group}/${box.info.id}/nomic.groovy") )
+        Assert.assertTrue( hdfs.exist("/user/test/.nomic/repository/${box.info.group}/${box.info.id}/nomic.box") )
         Assert.assertTrue( hdfs.exist("/user/test/.nomic/repository/${box.info.group}/${box.info.id}/nomic.info") )
     }
 
