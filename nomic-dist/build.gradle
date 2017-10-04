@@ -43,7 +43,7 @@ distTar {
 
 ospackage {
     packageName = 'nomic'
-    version = '1.0.0'
+    version = project.version
     release = '1'
     os = LINUX
 
