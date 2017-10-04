@@ -15,7 +15,7 @@ class FileSystemBundleTest {
 
         // try to get the entry
         val entry = bundle.descriptor();
-        Assert.assertEquals("nomic.groovy", entry.name)
+        Assert.assertEquals("nomic.box", entry.name)
 
         // read entry
         val entryContent = entry.openInputStream().reader().use {
@@ -42,6 +42,6 @@ class FileSystemBundleTest {
         Assert.assertEquals(1, entries.size)
     }
 
-    fun allGroovyEntries(e: Entry):Boolean = e.name.endsWith(".groovy")
+    fun allGroovyEntries(e: Entry):Boolean = e.name.endsWith(".box")
 
 }

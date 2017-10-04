@@ -1,4 +1,4 @@
-package nomic.itest;
+package nomic.itest.steps;
 
 import net.thucydides.core.annotations.Step;
 import nomic.Nomic;
@@ -8,7 +8,6 @@ import nomic.TypesafeNomicConfig;
 import nomic.box.BoxInfo;
 import nomic.box.InstalledBox;
 import nomic.bundle.Bundle;
-import org.assertj.core.api.Assertions;
 
 import java.io.File;
 import java.util.Optional;

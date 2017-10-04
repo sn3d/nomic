@@ -1,0 +1,30 @@
+sourceSets {
+    integTest {
+        java.srcDir 'src/integ-test/java'
+        resources.srcDir 'src/integ-test/resources'
+    }
+}
+
+dependencies {
+    integTestCompile sourceSets.main.output
+    integTestCompile sourceSets.test.output
+
+    integTestCompile configurations.compile
+    integTestCompile configurations.testCompile
+
+    integTestRuntime configurations.runtime
+    integTestRuntime configurations.testRuntime
+}
+
+
+task integTest(type: Test) {
+    group = LifecycleBasePlugin.VERIFICATION_GROUP
+    description = 'Runs the integration tests.'
+
+    testClassesDirs = sourceSets.integTest.output.classesDirs
+    classpath = sourceSets.integTest.runtimeClasspath
+
+    binResultsDir = file("$buildDir/integration-test-results/binary/integTest")
+
+    mustRunAfter tasks.test
+}

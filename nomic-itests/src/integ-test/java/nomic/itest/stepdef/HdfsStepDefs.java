@@ -1,17 +1,12 @@
 package nomic.itest.stepdef;
 
-import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
-import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import net.thucydides.core.annotations.Steps;
-import nomic.Nomic;
 import nomic.NomicConfig;
-import nomic.NomicInstance;
-import nomic.TypesafeNomicConfig;
-import nomic.itest.HdfsSteps;
-import nomic.itest.NomicSteps;
+import nomic.itest.steps.HdfsSteps;
+import nomic.itest.steps.NomicSteps;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

@@ -8,7 +8,7 @@ import org.junit.runner.RunWith;
  */
 @RunWith(Cucumber.class)
 @CucumberOptions(
-	features="src/test/resources/features",
+	features="src/integ-test/resources/features",
 	glue = "nomic.itest")
 public class NomicITest {
 }

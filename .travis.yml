@@ -6,6 +6,5 @@ jdk:
 os:
   - linux
 script:
-  - ./gradlew clean assemble
+  - ./gradlew clean test assemble
 
-  

@@ -1,13 +1,12 @@
 package nomic.itest.stepdef;
 
-import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import net.thucydides.core.annotations.Steps;
-import nomic.itest.HiveSteps;
-import nomic.itest.NomicSteps;
+import nomic.itest.steps.HiveSteps;
+import nomic.itest.steps.NomicSteps;
 
 /**
  * @author zdenko.vrabel@wirecard.com

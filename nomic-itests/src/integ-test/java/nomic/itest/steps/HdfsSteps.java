@@ -1,12 +1,10 @@
-package nomic.itest;
+package nomic.itest.steps;
 
 import net.thucydides.core.annotations.Step;
 import nomic.NomicConfig;
 import nomic.TypesafeNomicConfig;
 import nomic.hdfs.HdfsAdapter;
-import nomic.hdfs.RealHdfs;
 import nomic.hdfs.plugin.HdfsPlugin;
-import nomic.hive.plugin.HivePlugin;
 import org.apache.commons.io.IOUtils;
 
 

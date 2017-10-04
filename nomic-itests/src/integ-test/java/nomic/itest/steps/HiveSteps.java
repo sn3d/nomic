@@ -1,4 +1,4 @@
-package nomic.itest;
+package nomic.itest.steps;
 
 import net.thucydides.core.annotations.Step;
 import nomic.NomicConfig;
