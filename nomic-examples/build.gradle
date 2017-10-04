@@ -1,0 +1,22 @@
+task helloWorld1Zip(type: Zip) {
+    from 'hello-world'
+    archiveName = 'hello-world-1.box'
+}
+
+task helloWorld2Zip(type: Zip) {
+    from 'hello-world-2'
+    archiveName = 'hello-world-2.box'
+}
+
+
+task submodulesZip(type: Zip) {
+    from 'submodules'
+    archiveName = 'submodules.box'
+}
+
+task hiveSimpleZip(type: Zip) {
+    from 'hive-simple'
+    archiveName = 'hive-simple.box'
+}
+
+task buildExamples dependsOn helloWorld1Zip, helloWorld2Zip, submodulesZip, hiveSimpleZip

@@ -1,0 +1,146 @@
+version '1.0-SNAPSHOT'
+
+buildscript {
+	ext.kotlin_version = '1.1.50'
+	ext.dokka_version = '0.9.15'
+
+	repositories {
+		mavenCentral()
+		jcenter()
+	}
+	dependencies {
+		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+		classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.1'
+		classpath 'com.netflix.nebula:gradle-ospackage-plugin:4.4.2'
+		classpath "org.jetbrains.dokka:dokka-gradle-plugin:${dokka_version}"
+	}
+}
+
+allprojects { project ->
+	group = "com.wirecard"
+	version = version
+
+	repositories {
+		mavenCentral()
+		jcenter()
+	}
+
+}
+
+subprojects { subproject ->
+
+	apply plugin: 'kotlin'
+
+	sourceCompatibility = 1.8
+
+	compileKotlin {
+		kotlinOptions {
+			jvmTarget = "1.8"
+		}
+	}
+
+	compileTestKotlin {
+		kotlinOptions {
+			jvmTarget = "1.8"
+		}
+	}
+
+	dependencies {
+		compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
+		testCompile group: 'junit', name: 'junit', version: '4.12'
+		testCompile 'org.assertj:assertj-core:3.8.0'
+	}
+}
+
+project('nomic-core') {
+	dependencies {
+		compile group: "com.github.spullara.mustache.java", name: "compiler", version: "0.9.5"
+		compile 'commons-io:commons-io:2.4'
+	}
+
+	apply plugin: 'org.jetbrains.dokka'
+
+	dokka {
+		outputFormat = 'html'
+		outputDirectory = "$buildDir/javadoc"
+	}
+}
+
+project('nomic-dsl-groovy') {
+	apply plugin: 'groovy'
+
+	dependencies {
+		compile project(':nomic-core')
+		compile 'org.codehaus.groovy:groovy:2.4.12'
+	}
+}
+
+project('nomic-hdfs') {
+	dependencies {
+		compile project(':nomic-core')
+		compile (group: 'org.apache.hadoop', name: 'hadoop-hdfs', version: '2.7.3')
+		compile (group: 'org.apache.hadoop', name: 'hadoop-common', version: '2.7.3')
+	}
+}
+
+project('nomic-hdfs-dsl') {
+	apply plugin: 'groovy'
+
+	dependencies {
+		compile project(':nomic-dsl-groovy')
+		compile project(':nomic-hdfs')
+		compile 'org.codehaus.groovy:groovy:2.4.12'
+	}
+}
+
+project('nomic-hive') {
+	dependencies {
+		compile project(':nomic-core')
+		compile group: 'org.apache.hive', name: 'hive-jdbc', version: '1.1.0'
+		compile (group: 'org.apache.hadoop', name: 'hadoop-hdfs', version: '2.7.3')
+		compile (group: 'org.apache.hadoop', name: 'hadoop-common', version: '2.7.3')
+		compile group: "com.github.spullara.mustache.java", name: "compiler", version: "0.9.5"
+	}
+}
+
+project('nomic-hive-dsl') {
+	apply plugin: 'groovy'
+
+	dependencies {
+		compile project(':nomic-dsl-groovy')
+		compile project(':nomic-hive')
+		compile 'org.codehaus.groovy:groovy:2.4.12'
+	}
+}
+
+project('nomic-app') {
+	dependencies {
+		compile project(':nomic-core')
+		compile project(':nomic-dsl-groovy')
+		compile project(':nomic-hdfs')
+		compile project(':nomic-hdfs-dsl')
+		compile project(':nomic-hive')
+		compile project(':nomic-hive-dsl')
+		compile group: "com.typesafe", name: "config", version: "1.3.1"
+	}
+}
+
+project('nomic-itests') {
+	apply plugin: 'groovy'
+
+	dependencies {
+		compile project(':nomic-app')
+		compile 'org.codehaus.groovy:groovy:2.4.12'
+		compile 'net.serenity-bdd:serenity-junit:1.5.7'
+		compile 'net.serenity-bdd:serenity-core:1.5.7'
+		compile 'net.serenity-bdd:serenity-cucumber:1.5.7'
+		compile 'org.assertj:assertj-core:3.8.0'
+	}
+}
+
+project('nomic-dist') {
+	dependencies {
+		compile project(':nomic-app')
+	}
+}
+

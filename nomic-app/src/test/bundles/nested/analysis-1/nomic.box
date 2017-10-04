@@ -1,0 +1,7 @@
+group = "examples"
+name = "analysis-1"
+version = "1.0.0"
+
+hdfs {
+    resource "query.q" to "/$appDir/$group/$name/some-query.q"
+}

@@ -1,0 +1,28 @@
+#!/bin/sh
+
+# resolve links - $0 may be a softlink
+PRG="$0"
+while [ -h "$PRG" ]; do
+  ls=`ls -ld "$PRG"`
+  link=`expr "$ls" : '.*-> \(.*\)$'`
+  if expr "$link" : '/.*' > /dev/null; then
+    PRG="$link"
+  else
+    PRG=`dirname "$PRG"`/"$link"
+  fi
+done
+
+# Get standard environment variables
+PRGDIR=`dirname "$PRG"`
+[ -z "$NOMIC_HOME" ] && NOMIC_HOME=`cd "$PRGDIR/.." >/dev/null; pwd`
+
+[ -f $NOMIC_HOME/conf/setenv ] && . $NOMIC_HOME/conf/setenv
+
+if [ -z "$JAVA_HOME" ]; then
+    echo "JAVA_HOME is not set"
+    exit 1
+fi
+
+NOMIC_ALL_OPTS="-Dconfig.file=$NOMIC_HOME/conf/nomic.conf -Dnomic.home=$NOMIC_HOME $NOMIC_OPTS -Dlog4j.configuration=file:$NOMIC_HOME/conf/log4j.xml"
+CMD="$JAVA_HOME/bin/java $NOMIC_ALL_OPTS -jar $NOMIC_HOME/lib/nomic.jar "
+eval $CMD "$@"

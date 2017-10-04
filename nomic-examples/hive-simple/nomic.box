@@ -1,0 +1,15 @@
+group = "nomic-examples"
+name = "hive-simple"
+version = "1.0.0"
+
+hive {
+    fields (
+        'OMNI_ROOT_DIR': "${appDir}/..",
+        'DATABASE_SCHEMA': defaultSchema
+    )
+
+    dir "${appDir}/"
+
+    script "create_authors_table.q"
+    //table "authors" being "create_authors_table.q"
+}

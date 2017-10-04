@@ -1,0 +1,7 @@
+group = "examples"
+name = "simple-hive"
+version = "1.0.0"
+
+hive {
+    table "TRANSACTION" from "query.q"
+}

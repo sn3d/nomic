@@ -1,0 +1,5 @@
+group = "examples"
+name = "simple-bundle"
+version = "1.0.0"
+
+likeAPirate "qwe"

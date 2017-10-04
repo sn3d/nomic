@@ -1,0 +1,10 @@
+group = "nomic-examples"
+name = "hello-world"
+version = "1.0.0"
+
+hdfs {
+    resource "hello-world.txt"
+    resource "old.txt"
+    resource "hello-world.txt" to "/test/first.txt"
+    resource "hello-world.txt" to "test/second.txt"
+}

@@ -1,0 +1,3 @@
+group: test-dependency
+name: parent-b
+version: 1.0.0

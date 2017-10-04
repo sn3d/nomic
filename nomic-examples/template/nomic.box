@@ -1,0 +1,8 @@
+group = "nomic-examples"
+name = "template"
+version = "1.0.0"
+
+hdfs {
+    template "simple-template.xml.mustache" with 'title': 'Clean Code', 'author': 'Robert C. Martin'
+    template "simple-template.xml.mustache" to "/test/beautiful-code.xml" with 'title': 'Beautiful Code', 'author': 'Andy Oram, Greg Wilson'
+}

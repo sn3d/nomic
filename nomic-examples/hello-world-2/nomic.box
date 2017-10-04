@@ -1,0 +1,8 @@
+group = "nomic-examples"
+name = "hello-world"
+version = "2.0.0"
+
+hdfs {
+    resource "hello-world.txt"
+    resource "new.txt"
+}

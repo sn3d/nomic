@@ -1,0 +1,10 @@
+group = "nomic-examples"
+name = "submodules"
+version = "1.0.0"
+
+module("submodule-1")
+module("submodule-2")
+
+hdfs {
+    resource "main.txt"
+}

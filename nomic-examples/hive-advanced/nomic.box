@@ -1,0 +1,21 @@
+group = "nomic-examples"
+name = "hive-advanced"
+version = "1.0.0"
+
+APP_ROOT_DIR = "${appDir}/.."
+DATABASE_SCHEMA = "nomic_test"
+
+hive {
+    fields 'DATABASE_SCHEMA': defaultSchema // override database field
+
+    // create table 'books' by script, the uninstall remove the table
+    table "books" from "create_books_table.q"
+
+    // create table 'users' by script, the uninstall keep the table (not removing)
+    table "users" from "create_users_table.q" keepIt true
+}
+
+// create nomic-test schema if not exist, the schema is not removed during uninstall
+hive("nomic_test") {
+    table "authors" from "create_authors_table.q"
+}

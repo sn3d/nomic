@@ -1,0 +1,7 @@
+group = "examples"
+name = "analysis-2"
+version = "1.0.0"
+
+hdfs {
+    resource "query.pig"
+}

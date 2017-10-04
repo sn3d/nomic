@@ -1,0 +1,8 @@
+group = "nomic-examples"
+name = "directories"
+version = "1.0.0"
+
+hdfs {
+    dir "${homeDir}/dir-stay" keepIt true
+    dir "${homeDir}/dir-remove"
+}

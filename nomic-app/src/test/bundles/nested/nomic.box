@@ -1,0 +1,7 @@
+group = "examples"
+name = "nested-bundle"
+version = "1.0.0"
+
+module("analysis-1")
+module("analysis-2")
+module("use-case-1")

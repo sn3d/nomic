@@ -1,0 +1,17 @@
+def globalContext = context(filetypes: ['box', 'groovy' ])
+
+contribute(globalContext) {
+
+    method name: 'module', params: [
+            'path': String
+    ]
+
+    property name: "name", type: 'String'
+    property name: "version", type: 'String'
+    property name: "group", type: 'String'
+
+    property name: "user", type: 'String'
+    property name: "homeDir", type: 'String'
+    property name: "appDir", type: 'String'
+    property name: "defaultSchema", type: 'String'
+}
