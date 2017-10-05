@@ -46,24 +46,24 @@ ospackage {
     version = project.version
     release = '1'
     os = LINUX
+    permissionGroup 'root'
+    user 'root'
 
     from("src/bin") {
-        fileMode 0740
+        fileMode 0755
         into "/usr/share/nomic/bin"
     }
 
     from(project(':nomic-app').buildDir.toString() + "/libs") {
-        fileMode 0640
+        fileMode 0644
         include "nomic.jar"
         into "/usr/share/nomic/lib"
     }
 
     from("src/conf") {
         fileType CONFIG | NOREPLACE
-        fileMode 0640
+        fileMode 0644
         into "/etc/nomic"
-        permissionGroup 'hdfs'
-        user 'hdfs'
     }
 
     link("/usr/share/nomic/conf", "/etc/nomic")
