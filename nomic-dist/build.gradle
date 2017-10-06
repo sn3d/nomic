@@ -24,6 +24,11 @@ distributions {
                 into "bin"
             }
 
+            from("src/bin-win") {
+                fileMode 0640
+                into "bin"
+            }
+
             from("src/conf") {
                 fileMode 0640
                 into "conf"
