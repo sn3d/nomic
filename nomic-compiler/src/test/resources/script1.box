@@ -1,0 +1,6 @@
+name = "script1"
+group = "nomic-example"
+version = "1.0.0"
+
+module "module-a"
+module "module-b"

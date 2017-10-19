@@ -2,7 +2,7 @@ package nomic.itest.steps;
 
 import net.thucydides.core.annotations.Step;
 import nomic.NomicConfig;
-import nomic.TypesafeNomicConfig;
+import nomic.app.TypesafeConfig;
 import nomic.hive.InvalidHiveQueryException;
 import nomic.hive.plugin.HivePlugin;
 
@@ -29,7 +29,7 @@ public class HiveSteps {
 	@Step
 	public void checkIfSchemeExist(String scheme) {
 		// connect to Hive
-		NomicConfig config = TypesafeNomicConfig.Companion.loadDefaultConfiguration();
+		NomicConfig config = TypesafeConfig.Companion.loadDefaultConfiguration();
 		HivePlugin hive = HivePlugin.Companion.createPlugin(config);
 
 		hive.exec("SHOW TABLES IN NOMIC_TEST");
@@ -37,7 +37,7 @@ public class HiveSteps {
 
 	@Step
 	public void dropTableIfExist(String table) {
-		NomicConfig config = TypesafeNomicConfig.Companion.loadDefaultConfiguration();
+		NomicConfig config = TypesafeConfig.Companion.loadDefaultConfiguration();
 		dropTableIfExist(config.getHiveSchema(), table);
 	}
 
@@ -45,7 +45,7 @@ public class HiveSteps {
 	@Step
 	public void dropTableIfExist(String schema, String table) {
 		// connect to Hive
-		NomicConfig config = TypesafeNomicConfig.Companion.loadDefaultConfiguration();
+		NomicConfig config = TypesafeConfig.Companion.loadDefaultConfiguration();
 		HivePlugin hive = HivePlugin.Companion.createPlugin(config);
 		hive.exec("DROP TABLE " + schema + "." + table);
 	}
@@ -56,7 +56,7 @@ public class HiveSteps {
 	//-------------------------------------------------------------------------------------------------
 
 	private boolean tableExist(String table) {
-		NomicConfig config = TypesafeNomicConfig.Companion.loadDefaultConfiguration();
+		NomicConfig config = TypesafeConfig.Companion.loadDefaultConfiguration();
 		return tableExist(config.getHiveSchema(), table);
 	}
 
@@ -64,7 +64,7 @@ public class HiveSteps {
 	private boolean tableExist(String schema, String table) {
 		try {
 			// connect to Hive
-			NomicConfig config = TypesafeNomicConfig.Companion.loadDefaultConfiguration();
+			NomicConfig config = TypesafeConfig.Companion.loadDefaultConfiguration();
 			HivePlugin hive = new HivePlugin(config.getHiveJdbcUrl(), config.getHiveSchema(), config.getHiveUsername(), config.getHivePassword());
 
 			// check the table existence

@@ -1,0 +1,8 @@
+name = "simple"
+group = "examples"
+version = "2.0.0"
+
+hdfs {
+    resource "file-ng.txt"
+    resource "file-update.txt"
+}

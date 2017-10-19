@@ -1,14 +1,19 @@
-def globalContext = context(filetypes: ['box', 'groovy' ])
+def globalContext = context(filetypes: ['box'])
 
 contribute(globalContext) {
 
     method name: 'hdfs', params: [
-            'path': Closure
+            'c': Closure
     ]
+
+    method name: 'hdfs', params: [
+            'workingDir': String,
+            'c': Closure
+    ]
+
 
     def call = enclosingCall("hdfs")
     if (call) {
-        delegatesTo(findClass('nomic.hdfs.dsl.HdfsDslContext'))
+        delegatesTo(findClass('nomic.hdfs.dsl.HdfsContext'))
     }
 }
-

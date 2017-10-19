@@ -1,30 +1,25 @@
 package nomic
 
-import nomic.hdfs.HdfsAdapter
-import java.net.URI
-
 /**
  * @author zdenko.vrabel@wirecard.com
  */
-open class NomicConfig(
+abstract class NomicConfig {
 
-	var hdfsHomeDir:String = "", // this can be changed by Nomic class
+	abstract operator fun get(name: String): String?
 
-	val user: String = System.getProperty("user.name"),
-	val hdfsAppDir: String = "/app",
-	val hdfsRepositoryDir: String = "",
+	open val user: String
+		get() = this["nomic.user"] ?: throw RequiredConfigPropertyException("nomic.user")
 
-	val simulatorEnabled: Boolean = false,
-	val simulatorPath: String = "",
+	open val hdfsHomeDir: String
+		get() = this["nomic.hdfs.home"] ?: throw RequiredConfigPropertyException("nomic.hdfs.home")
 
-	val hadoopNameNode: String = "",
-	val hadoopCoreSiteXml: String = "",
-	val hadoopHdfsSiteXml: String = "",
+	open val hdfsAppDir: String
+		get() = this["nomic.hdfs.app.dir"] ?: throw RequiredConfigPropertyException("nomic.hdfs.app.dir")
 
-	val hiveJdbcUrl:  String = "",
-	val hiveUsername: String = "",
-	val hivePassword: String = "",
-	val hiveSchema:   String = ""
-) {
+	open val hdfsRepositoryDir: String
+		get() = this["nomic.hdfs.repository.dir"] ?: throw RequiredConfigPropertyException("nomic.hdfs.repository.dir")
+
+	open val defaultSchema: String
+		get() = this["nomic.default.schema"] ?: throw RequiredConfigPropertyException("nomic.default.schema")
 
 }
