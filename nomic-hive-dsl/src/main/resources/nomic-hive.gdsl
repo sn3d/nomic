@@ -3,18 +3,17 @@ def globalContext = context(filetypes: ['box', 'groovy' ])
 contribute(globalContext) {
 
     method name: 'hive', params: [
-            'path': Closure
+            'c': Closure
     ]
 
     method name: 'hive', params: [
-            'schema': String,
-            'path': Closure
+            'defaultSchema': String,
+            'c': Closure
     ]
-
 
     def call = enclosingCall("hive")
     if (call) {
-        delegatesTo(findClass('nomic.hive.dsl.HiveDslContext'))
+        delegatesTo(findClass('nomic.hive.dsl.HiveContext'))
     }
 }
 

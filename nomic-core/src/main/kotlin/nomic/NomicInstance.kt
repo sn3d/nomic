@@ -1,26 +1,50 @@
 package nomic
 
-import nomic.box.Box
-import nomic.box.BoxInfo
-import nomic.box.InstalledBox
-import nomic.bundle.ArchiveBundle
-import nomic.bundle.Bundle
-import nomic.bundle.DirectoryBundle
-import java.io.File
-import java.util.*
+import nomic.core.*
 
 /**
+ * @see NomicApp
  * @author zdenko.vrabel@wirecard.com
  */
 interface NomicInstance {
 
-    val config: NomicConfig
+	/**
+	 * Method compile bundle into [BundledBox]
+	 */
+	fun open(bundle: Bundle): BundledBox
 
-    fun install(bundle: Bundle, forceIt:Boolean = false): Box
-	fun upgrade(bundle: Bundle): Box
-	fun uninstall(info: BoxInfo): Boolean
-	fun installedBoxes(): List<BoxInfo>
-	fun details(info: BoxInfo): Optional<InstalledBox>
+	/**
+	 * compile the bundle and install it if it's not installed yet.
+	 *
+	 * @param force if it set to true, the bundle will be installed
+	 *        even if box is already present. It's good for
+	 *        fixing bad installations.
+	 */
+    fun install(bundle: Bundle, force: Boolean = false)
 
+	/**
+	 * compile the bundle and upgrade it, or install if it's not
+	 * present
+	 */
+	fun upgrade(bundle: Bundle)
+
+	/**
+	 * uninstall the box by reference if it's present
+	 *
+	 * @param force if it is set to true, the method will
+	 *        uninstall the [InstalledBox] even any error occurred.
+	 */
+	fun uninstall(ref: BoxRef, force: Boolean = false)
+
+	/**
+	 * return list of boxes installed/available in system
+	 */
+	fun installedBoxes(): List<BoxRef>
+
+	/**
+	 * return concrete box with facts if it's present, otherwise
+	 * returns null.
+	 */
+	fun details(info: BoxRef): InstalledBox?
 
 }

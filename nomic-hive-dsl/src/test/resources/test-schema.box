@@ -1,0 +1,5 @@
+name = "test-schema"
+
+hive {
+    schema "CUSTOM_SCHEMA"
+}
