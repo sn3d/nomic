@@ -1,6 +1,6 @@
 package nomic.hdfs.adapter
 
-import nomic.WtfException
+import nomic.core.exception.WtfException
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.FileSystem
 import java.io.File

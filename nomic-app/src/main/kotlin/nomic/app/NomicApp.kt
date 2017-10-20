@@ -15,9 +15,12 @@
  */
 package nomic.app
 
-import nomic.*
 import nomic.compiler.Compiler
 import nomic.core.*
+import nomic.core.exception.BoxAlreadyInstalledException
+import nomic.core.exception.BoxNotInstalledException
+import nomic.core.exception.WtfException
+import nomic.core.fact.ModuleFact
 import nomic.db.AvroDb
 import nomic.db.NomicDb
 import nomic.hdfs.HdfsPlugin
@@ -87,7 +90,7 @@ class NomicApp : NomicInstance {
 	/**
 	 * open the bundle and compile it to [BundledBox] with facts
 	 */
-	override fun open(bundle: Bundle): BundledBox {
+	override fun compile(bundle: Bundle): BundledBox {
 		val facts = compiler.compile(bundle.script)
 		return BundledBox(bundle, facts)
 	}
@@ -100,24 +103,36 @@ class NomicApp : NomicInstance {
 	 *        even if box is already present. It's good for
 	 *        fixing bad installations.
 	 */
-	override fun install(bundle: Bundle, force: Boolean) =
-		install(open(bundle), force)
+	override fun install(bundle: Bundle, force: Boolean): BoxRef =
+		install(compile(bundle), force)
 
 
 	/**
 	 * install the [BundledBox]
 	 */
-	fun install(box: BundledBox, force: Boolean) {
+	fun install(box: BundledBox, force: Boolean): BoxRef {
 		if (!canInstall(box, force)) {
 			throw BoxAlreadyInstalledException(box)
 		}
+
+		// install nested modules first
+		val installedNestedBoxes =
+			box.facts.asSequence()
+				.filterIsInstance(ModuleFact::class.java)
+				.map { m ->
+					// install nested module
+					val moduleBundle = NestedBundle(box, m.name)
+					install(moduleBundle, force)
+				}
+				.toList() // return nested modules for add. dependencies
 
 		// send all facts into plugins for commit
 		for(fact in box.facts) {
 			commitFact(box, fact)
 		}
 
-		db.insertOrUpdate(box)
+		db.insertOrUpdate(box, installedNestedBoxes)
+		return box.ref()
 	}
 
 
@@ -136,6 +151,11 @@ class NomicApp : NomicInstance {
 			throw BoxNotInstalledException(box.ref())
 		}
 
+		// first uninstall all dependencies
+		box.dependencies.forEach { dep ->
+			uninstall(dep, force)
+		}
+
 		// send all facts into plugins for rollback
 		for(fact in box.facts) {
 			rollbackFact(box, fact)
@@ -150,7 +170,7 @@ class NomicApp : NomicInstance {
 	 * present
 	 */
 	override fun upgrade(bundle: Bundle) =
-		upgrade(open(bundle))
+		upgrade(compile(bundle))
 
 
 	/**

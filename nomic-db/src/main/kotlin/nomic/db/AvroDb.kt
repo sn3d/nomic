@@ -16,6 +16,8 @@
 package nomic.db
 
 import nomic.core.*
+import nomic.core.fact.RequireFact
+import nomic.core.script.InMemoryScript
 import nomic.db.avro.DependencyDto
 import nomic.db.avro.InstalledBoxDto
 import nomic.hdfs.adapter.HdfsAdapter
@@ -37,9 +39,16 @@ class AvroDb(hdfs: HdfsAdapter, nomicHome: String) : NomicDb {
 		this.nomicHome = nomicHome;
 	}
 
-	override fun insertOrUpdate(box: Box): Box {
+	override fun insertOrUpdate(box: Box, dependencies:List<BoxRef>): Box {
 		// convert to DTO
 		val dto = box.toDto()
+
+		// add additional dependencies into DTO
+		dependencies
+			.map(BoxRef::toDependencyDto)
+			.forEach { dep ->
+				dto.getDependencies().add(dep)
+			}
 
 		// save to avro file
 		val path = normalizedPath(box.ref())
@@ -71,6 +80,18 @@ class AvroDb(hdfs: HdfsAdapter, nomicHome: String) : NomicDb {
 
 	override fun delete(ref: BoxRef) =
 		hdfs.delete(normalizedPath(ref))
+
+
+	override fun dependantsOf(ref: BoxRef): List<BoxRef> =
+		loadAll()
+			.filter { box ->
+				box.dependencies.filter { dependency ->
+					dependency.name == ref.name && dependency.group == ref.group
+				}.isNotEmpty()
+			}
+			.map(Box::ref)
+
+
 
 
 	private fun isAvroFile(file: String): Boolean =
@@ -121,7 +142,7 @@ private fun Box.toDto(): InstalledBoxDto =
 				.map(RequireFact::toDto)
 				.toList()
 
-		setDependencies(dependencies)
+		setDependencies(dependencies.toMutableList())
 	}
 
 
@@ -129,10 +150,13 @@ private fun Box.toDto(): InstalledBoxDto =
  * function convert [RequireFact] to Avro's [DependencyDto]
  */
 private fun RequireFact.toDto(): DependencyDto =
+	this.box.toDependencyDto()
+
+private fun BoxRef.toDependencyDto(): DependencyDto =
 	DependencyDto().apply {
-		setName(this@toDto.box.name)
-		setGroup(this@toDto.box.group)
-		setVersion(this@toDto.box.version)
+		setName(this@toDependencyDto.name)
+		setGroup(this@toDependencyDto.group)
+		setVersion(this@toDependencyDto.version)
 	}
 
 private fun DependencyDto.toNomicBoxRef(): BoxRef =

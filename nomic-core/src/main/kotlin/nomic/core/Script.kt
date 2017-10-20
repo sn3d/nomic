@@ -15,9 +15,7 @@
  */
 package nomic.core
 
-import nomic.MissingDescriptorScriptException
 import java.io.Reader
-import java.io.StringReader
 
 /**
  * Representing descriptor script 'nomic.box' that can be compiled
@@ -32,31 +30,4 @@ interface Script {
 	 * this method is called when [Compiler] need to compile the descriptor script.
 	 */
 	fun open(): Reader
-}
-
-
-/**
- * this is simple implementation of [Script] script as text/string.
- */
-class InMemoryScript(val script: String) : Script {
-	override fun open(): Reader =
-		StringReader(script)
-}
-
-
-/**
- * this implementation representing '/nomic.box' [Script] for given [Bundle]
- */
-class BundleScript(val bundle: Bundle) : Script {
-	override fun open(): Reader =
-		bundle.entry("/nomic.box")?.openInputStream()?.reader() ?: throw MissingDescriptorScriptException(bundle)
-}
-
-
-/**
- * this implementation representing [Script] on classpath
- */
-class ClasspathScript(val resource: String) : Script {
-	override fun open(): Reader =
-		this.javaClass.getResourceAsStream(resource).reader()
 }

@@ -2,7 +2,7 @@ package nomic.dsl.builder
 
 import nomic.core.Fact
 import nomic.core.FactBuilder
-import nomic.core.ModuleFact
+import nomic.core.fact.ModuleFact
 
 /**
  * @author vrabel.zdenko@gmail.com

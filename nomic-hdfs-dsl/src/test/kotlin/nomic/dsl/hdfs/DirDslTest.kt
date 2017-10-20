@@ -15,7 +15,7 @@
  */
 package nomic.dsl.hdfs
 
-import nomic.core.ClasspathScript
+import nomic.core.script.ClasspathScript
 import nomic.hdfs.DirFact
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
@@ -26,7 +26,7 @@ import org.junit.Test
 class DirDslTest {
 
 	@Test
-	fun testDir() {
+	fun `compilation of script with dir should create dir fact correctly`() {
 		val compiler = nomic.compiler.Compiler(appDir = "/app")
 		val facts = compiler.compile(ClasspathScript("/test-dir.box"))
 
@@ -39,7 +39,7 @@ class DirDslTest {
 
 
 	@Test
-	fun testDirAbsoluteKeepIt() {
+	fun `compilation of script with KeepIt dir, with dir should create dir fact correctly`() {
 		val compiler = nomic.compiler.Compiler(appDir = "/app")
 		val facts = compiler.compile(ClasspathScript("/test-dir-absolute-keepit.box"))
 
@@ -52,7 +52,7 @@ class DirDslTest {
 
 
 	@Test
-	fun testDirChangedWorkingDir() {
+	fun `compile script with changed working dir should create fact correctly`() {
 		val compiler = nomic.compiler.Compiler(appDir = "/app")
 		val facts = compiler.compile(ClasspathScript("/test-dir-changed-workingdir.box"))
 

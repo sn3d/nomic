@@ -1,0 +1,10 @@
+name = "root"
+group = "multimodule"
+version = "1.0.0"
+
+module "module-a"
+module "module-b"
+
+hdfs {
+    resource "file.txt"
+}

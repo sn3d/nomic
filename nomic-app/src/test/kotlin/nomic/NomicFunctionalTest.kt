@@ -18,10 +18,8 @@ package nomic
 import com.google.common.jimfs.Configuration
 import com.google.common.jimfs.Jimfs
 import nomic.app.NomicApp
-import nomic.app.SimpleConfig
-import nomic.core.BoxRef
-import nomic.core.Bundle
-import nomic.core.findBox
+import nomic.app.config.SimpleConfig
+import nomic.core.*
 import nomic.hdfs.HdfsPlugin
 import nomic.hdfs.ResourceFact
 import org.apache.commons.io.IOUtils
@@ -29,6 +27,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import java.nio.file.FileSystem
+import java.nio.file.FileSystems
 import java.nio.file.Files
 
 /**
@@ -60,6 +59,20 @@ class NomicFunctionalTest {
 		fs.copyResource("/bundles/simple-bundle-ng/file-ng.txt",  "./build/bundles/simple-bundle-ng/file-ng.txt")
 		fs.copyResource("/bundles/simple-bundle-ng/file-update.txt",  "./build/bundles/simple-bundle-ng/file-update.txt")
 
+		//prepare test data for 'multimodule-bundle'
+		Files.createDirectories(fs.getPath("./build/bundles/multimodule-bundle"));
+		Files.createDirectories(fs.getPath("./build/bundles/multimodule-bundle/module-a"));
+		Files.createDirectories(fs.getPath("./build/bundles/multimodule-bundle/module-b"));
+		Files.createDirectories(fs.getPath("./build/bundles/multimodule-bundle/module-b/submodule-c"));
+		fs.copyResource("/bundles/multimodule-bundle/nomic.box", "./build/bundles/multimodule-bundle/nomic.box")
+		fs.copyResource("/bundles/multimodule-bundle/file.txt", "./build/bundles/multimodule-bundle/file.txt")
+		fs.copyResource("/bundles/multimodule-bundle/module-a/nomic.box", "./build/bundles/multimodule-bundle/module-a/nomic.box")
+		fs.copyResource("/bundles/multimodule-bundle/file.txt", "./build/bundles/multimodule-bundle/module-a/file-a.txt")
+		fs.copyResource("/bundles/multimodule-bundle/module-b/nomic.box", "./build/bundles/multimodule-bundle/module-b/nomic.box")
+		fs.copyResource("/bundles/multimodule-bundle/file.txt", "./build/bundles/multimodule-bundle/module-b/file-b.txt")
+		fs.copyResource("/bundles/multimodule-bundle/module-b/submodule-c/nomic.box", "./build/bundles/multimodule-bundle/module-b/submodule-c/nomic.box")
+		fs.copyResource("/bundles/multimodule-bundle/file.txt", "./build/bundles/multimodule-bundle/module-b/submodule-c/file-c.txt")
+
 		// create Nomic app instance
 		val conf = SimpleConfig(
 			"nomic.user" to "testuser",
@@ -75,11 +88,27 @@ class NomicFunctionalTest {
 
 
 	@Test
-	fun `simple scenario with opening, installing and uninstalling box`() {
+	fun `compilation of bundle should create BundledBox with facts etc`() {
+		val bundle = "./build/bundles/simple-bundle".asBundleFrom(fs)
+		val box = app.compile(bundle)
 
-		// open and install bundle
-		val bundle = Bundle.open(fs.getPath("./build/bundles/simple-bundle"))
-		val box = app.open(bundle)
+		assertThat(box.name).isEqualTo("simple")
+		assertThat(box.group).isEqualTo("examples")
+		assertThat(box.version).isEqualTo("1.0.0")
+
+		assertThat(box.facts)
+			.contains(
+				ResourceFact("/file.txt",       "/user/testuser/app/examples/simple/file.txt"),
+				ResourceFact("/file-update.txt","/user/testuser/app/examples/simple/file-update.txt"))
+
+	}
+
+
+	@Test
+	fun `simple scenario with installing and uninstalling box`() {
+
+		// install bundle
+		val bundle = "./build/bundles/simple-bundle".asBundleFrom(fs)
 		app.install(bundle)
 
 		// checks
@@ -118,8 +147,8 @@ class NomicFunctionalTest {
 	fun `upgrading the box to new version`() {
 
 		//install v1 bundle and then upgrade to v2
-		app.install(Bundle.open(fs.getPath("./build/bundles/simple-bundle")))
-		app.upgrade(Bundle.open(fs.getPath("./build/bundles/simple-bundle-ng")))
+		app.install("./build/bundles/simple-bundle".asBundleFrom(fs))
+		app.upgrade("./build/bundles/simple-bundle-ng".asBundleFrom(fs))
 
 		// checks
 		assertThat(app.installedBoxes())
@@ -135,6 +164,50 @@ class NomicFunctionalTest {
 		assertThat(fs.getPath("./build/hdfs/user/testuser/app/examples/simple/file.txt"))
 			.doesNotExist()
 
+	}
+
+	@Test
+	fun `install the multimodule box should create files on HDFS and register installed box in nomic app`() {
+		val multimoduleBundle = "./build/bundles/multimodule-bundle".asBundleFrom(fs)
+		app.install(multimoduleBundle)
+
+		// check files on HDFS
+		assertThat(fs.getPath("./build/hdfs/user/testuser/app/multimodule/root/file.txt"))
+			.isRegularFile()
+		assertThat(fs.getPath("./build/hdfs/user/testuser/app/multimodule/module-a/file-a.txt"))
+			.isRegularFile()
+		assertThat(fs.getPath("./build/hdfs/user/testuser/app/multimodule/module-b/file-b.txt"))
+			.isRegularFile()
+		assertThat(fs.getPath("./build/hdfs/user/testuser/app/multimodule/submodule-c/file-c.txt"))
+			.isRegularFile()
+
+		val moduleB = app.details(BoxRef.parse("multimodule:module-b:1.0.0"))!!
+		assertThat(moduleB.dependencies)
+			.contains(BoxRef.parse("multimodule:submodule-c:1.0.0"))
+	}
+
+
+	@Test
+	fun `uninstall the multimodule box should remove root module and all submodules`() {
+		// first, install it
+		val multimoduleBundle = "./build/bundles/multimodule-bundle".asBundleFrom(fs)
+		val ref = app.install(multimoduleBundle)
+
+		assertThat(app.details(BoxRef.parse("multimodule:module-a:1.0.0"))).isNotNull()
+		assertThat(app.details(BoxRef.parse("multimodule:module-b:1.0.0"))).isNotNull()
+		assertThat(app.details(BoxRef.parse("multimodule:submodule-c:1.0.0"))).isNotNull()
+
+		// now you can uninstall it
+		app.uninstall(ref)
+
+		assertThat(app.details(BoxRef.parse("multimodule:module-a:1.0.0"))).isNull()
+		assertThat(app.details(BoxRef.parse("multimodule:module-b:1.0.0"))).isNull()
+		assertThat(app.details(BoxRef.parse("multimodule:submodule-c:1.0.0"))).isNull()
+
+		assertThat(fs.getPath("./build/hdfs/user/testuser/app/multimodule/submodule-c/file-c.txt"))
+			.doesNotExist()
+		assertThat(fs.getPath("./build/hdfs/user/testuser/app/multimodule/root/file.txt"))
+			.doesNotExist()
 	}
 
 }

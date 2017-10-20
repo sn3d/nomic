@@ -16,7 +16,7 @@
 package nomic.app.cli
 
 import nomic.app.NomicApp
-import nomic.app.TypesafeConfig
+import nomic.app.config.TypesafeConfig
 import nomic.core.Bundle
 import kotlin.system.exitProcess
 
@@ -32,7 +32,7 @@ object InstallCliCommand {
 		}
 
 		val app = NomicApp(TypesafeConfig.loadDefaultConfiguration())
-		val bundle = Bundle.open(args[0])
+		val bundle = Bundle.create(args[0])
 		app.install(bundle)
 	}
 

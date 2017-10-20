@@ -25,35 +25,6 @@ package nomic.core
 interface Fact {
 }
 
-/**
- * this fact is associated with 'group' variable in DSL [Script]
- */
-data class GroupFact(val group: String) : Fact
-
-/**
- * this fact is associated with 'name' variable in DSL [Script].
- * The name is unique identifier of every box.
- */
-data class NameFact(val name: String) : Fact
-
-/**
- * this fact is associated with 'name' variable in DSL [Script].
- */
-data class VersionFact(val version: String) : Fact
-
-/**
- * this fact determine the box contain nested sub-box in folder
- * by name. It's same concept the maven is using
- */
-data class ModuleFact(val name: String): Fact
-
-
-/**
- * this fact make a dependency to another box
- */
-data class RequireFact(val box: BoxRef): Fact
-
-
 fun <T> List<Fact>.findFactType(type: Class<T>): T =
 	this.asSequence()
 		.filter { it -> type.isInstance(it) }

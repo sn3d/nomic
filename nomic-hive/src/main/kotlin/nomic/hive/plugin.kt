@@ -15,7 +15,7 @@
  */
 package nomic.hive
 
-import nomic.NomicConfig
+import nomic.core.NomicConfig
 import nomic.core.*
 import nomic.hive.adapter.HiveAdapter
 import nomic.hive.adapter.JdbcHiveAdapter

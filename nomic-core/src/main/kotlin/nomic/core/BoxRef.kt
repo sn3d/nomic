@@ -25,6 +25,7 @@ data class BoxRef(
 	val name: String = "",
 	val version: String = ""
 ) {
+
 	companion object {
 		@JvmStatic
 		fun createReferenceTo(box: Box) = BoxRef(box.group, box.name, box.version)

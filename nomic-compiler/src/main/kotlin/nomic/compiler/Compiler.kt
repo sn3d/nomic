@@ -16,9 +16,11 @@
 package nomic.compiler
 
 import groovy.lang.GroovyShell
-import nomic.MissingNameInScriptException
-import nomic.WtfException
+import nomic.core.exception.MissingNameInScriptException
 import nomic.core.*
+import nomic.core.fact.GroupFact
+import nomic.core.fact.NameFact
+import nomic.core.fact.VersionFact
 import org.codehaus.groovy.control.CompilerConfiguration
 import org.codehaus.groovy.control.customizers.ImportCustomizer
 

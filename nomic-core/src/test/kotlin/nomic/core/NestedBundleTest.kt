@@ -67,7 +67,7 @@ class NestedBundleTest {
 	}
 
 	@Test
-	fun testOneLevelNestedBundle() {
+	fun `one level nested bundle should have accessible entry`() {
 		val parentBundle = "/nested-bundle".asBundleFrom(fs)
 		val nestedBundle = NestedBundle(parentBundle, "/module-1")
 
@@ -81,7 +81,7 @@ class NestedBundleTest {
 	}
 
 	@Test
-	fun testNestedOfNestedBundle() {
+	fun `two level nested bundle should have accessible entry`() {
 		val parentBundle = "/nested-bundle".asBundleFrom(fs)
 		val nestedBundle = NestedBundle(parentBundle, "/module-2")
 		val nestedNestedBundle = NestedBundle(nestedBundle, "/submodule-2")

@@ -1,6 +1,6 @@
 package nomic.db
 
-import nomic.NotCompiledBoxException
+import nomic.core.exception.NotCompiledBoxException
 import nomic.compiler.Compiler
 import nomic.core.*
 

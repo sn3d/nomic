@@ -1,8 +1,8 @@
 package nomic.itest.steps;
 
 import net.thucydides.core.annotations.Step;
-import nomic.NomicConfig;
-import nomic.app.TypesafeConfig;
+import nomic.core.NomicConfig;
+import nomic.app.config.TypesafeConfig;
 import nomic.hive.InvalidHiveQueryException;
 import nomic.hive.plugin.HivePlugin;
 

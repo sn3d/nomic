@@ -16,6 +16,11 @@
 package nomic.compiler
 
 import nomic.core.*
+import nomic.core.fact.GroupFact
+import nomic.core.fact.ModuleFact
+import nomic.core.fact.NameFact
+import nomic.core.fact.VersionFact
+import nomic.core.script.ClasspathScript
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 

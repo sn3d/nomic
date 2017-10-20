@@ -51,7 +51,7 @@ class HdfsDirFactTest {
 
 
 	@Test
-	fun testCommitAndRollbackDir() {
+	fun `commit of directory fact should create directory, rollback should remove it`() {
 		var fact = DirFact(dir = "/test/dir")
 
 		// commit resource fact and check
@@ -65,7 +65,7 @@ class HdfsDirFactTest {
 
 
 	@Test
-	fun testCommitAndRollbackDirWithKeepIt() {
+	fun `directory fact with keepIt set to true should be created during commit, but not removed after rollback`() {
 		var fact = DirFact(dir = "/test/keepit", keepIt = true)
 
 		// commit resource fact and check

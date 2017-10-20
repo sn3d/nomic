@@ -1,6 +1,6 @@
 package nomic.hdfs.adapter
 
-import nomic.WtfException
+import nomic.core.exception.WtfException
 import java.io.*
 import java.nio.file.*
 import java.nio.file.attribute.BasicFileAttributes

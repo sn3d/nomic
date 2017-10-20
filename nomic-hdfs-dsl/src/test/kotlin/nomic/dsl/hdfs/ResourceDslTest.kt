@@ -15,7 +15,7 @@
  */
 package nomic.dsl.hdfs
 
-import nomic.core.ClasspathScript
+import nomic.core.script.ClasspathScript
 import nomic.hdfs.ResourceFact
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
@@ -26,7 +26,7 @@ import org.junit.Test
 class ResourceDslTest {
 
 	@Test
-	fun testCompileResource() {
+	fun `script with resource should be compiled into resource fact`() {
 		val compiler = nomic.compiler.Compiler(appDir = "/app")
 		val facts = compiler.compile(ClasspathScript("/test-compile-resource.box"))
 
@@ -40,7 +40,7 @@ class ResourceDslTest {
 
 
 	@Test
-	fun testCompileResourceWithDestInWorkingDir() {
+	fun `the resource in script with destination as working dir should be compiled into correct fact`() {
 		val compiler = nomic.compiler.Compiler(appDir = "/app")
 		val facts = compiler.compile(ClasspathScript("/test-resource-dest-workingdir.box"))
 
@@ -53,7 +53,7 @@ class ResourceDslTest {
 
 
 	@Test
-	fun testCompileResourceWithDestAbsolutePath() {
+	fun `the resource with absolute dest dir should be compiled into correct fact`() {
 		val compiler = nomic.compiler.Compiler(appDir = "/app")
 		val facts = compiler.compile(ClasspathScript("/test-resource-dest-absolute.box"))
 
@@ -66,7 +66,7 @@ class ResourceDslTest {
 
 
 	@Test
-	fun testCompileResourceWithChangedWorkingDir() {
+	fun `compile resource with changed working dir should have correct dest dir`() {
 		val compiler = nomic.compiler.Compiler(appDir = "/app")
 		val facts = compiler.compile(ClasspathScript("/test-resource-changed-workingdir.box"))
 
@@ -79,7 +79,7 @@ class ResourceDslTest {
 
 
 	@Test
-	fun testCompileResourceWithChangedWorkingDirAbsolute() {
+	fun `compile resource with changed working dir to absolute`() {
 		val compiler = nomic.compiler.Compiler(appDir = "/app")
 		val facts = compiler.compile(ClasspathScript("/test-resource-changed-workingdir-absolute.box"))
 
@@ -92,7 +92,8 @@ class ResourceDslTest {
 
 
 	@Test
-	fun testCompileResourceWithKeepIt() {
+	fun `compile reosurce with keepIt set to true`() {
+
 		val compiler = nomic.compiler.Compiler(appDir = "/app")
 		val facts = compiler.compile(ClasspathScript("/test-resource-keepit.box"))
 

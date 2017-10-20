@@ -1,8 +1,8 @@
-package nomic.app
+package nomic.app.config
 
 import com.typesafe.config.Config
 import com.typesafe.config.ConfigFactory
-import nomic.NomicConfig
+import nomic.core.NomicConfig
 
 /**
  * @author zdenko.vrabel@wirecard.com

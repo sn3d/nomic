@@ -23,7 +23,7 @@ import org.junit.Test
 class BoxExprTest {
 
 	@Test
-	fun testExpressions() {
+	fun `testing expressions that should match to box`() {
 		val box  = BoxRef("mygroup", "mybox", "1.0.0")
 
 		// positive
@@ -37,7 +37,7 @@ class BoxExprTest {
 	}
 
 	@Test
-	fun testNegativeExpressions() {
+	fun `testing expressions that shouldn't match to box`() {
 		val box  = BoxRef("mybox", "mygroup", "1.0.0")
 
 		//negative
@@ -51,7 +51,7 @@ class BoxExprTest {
 	}
 
 	@Test
-	fun testEmptyGroup() {
+	fun `testing expression on box with empty group`() {
 		val boxWithEmptyGroup = BoxRef("", "mybox", "1.0.0")
 		assert(BoxExpr.parse(":mybox:1.0.0").matchTo(boxWithEmptyGroup)) { "the ':mygroup:1.0.0' doesn't match to ${boxWithEmptyGroup}" }
 	}

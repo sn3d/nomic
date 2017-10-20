@@ -1,0 +1,7 @@
+name = "module-a"
+group = "multimodule"
+version = "1.0.0"
+
+hdfs {
+    resource "file-a.txt"
+}
