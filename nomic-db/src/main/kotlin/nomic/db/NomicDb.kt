@@ -23,7 +23,8 @@ import nomic.core.BoxRef
  */
 interface NomicDb {
 
-	fun insertOrUpdate(box: Box): Box
+	fun insertOrUpdate(box: Box, dependencies:List<BoxRef> = emptyList()): Box
+	fun dependantsOf(ref: BoxRef): List<BoxRef>
 	fun loadAll(): List<NotCompiledBox>
 	fun load(ref: BoxRef): NotCompiledBox?
 	fun delete(ref: BoxRef): Boolean

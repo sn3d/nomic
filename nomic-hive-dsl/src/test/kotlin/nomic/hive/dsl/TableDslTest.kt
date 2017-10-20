@@ -1,7 +1,7 @@
 package nomic.hive.dsl
 
-import nomic.core.ClasspathScript
 import nomic.core.findFactType
+import nomic.core.script.ClasspathScript
 import nomic.hive.TableFact
 import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat

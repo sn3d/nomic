@@ -15,6 +15,8 @@
  */
 package nomic.core
 
+import nomic.core.script.InMemoryScript
+
 /**
  * @author vrabel.zdenko@gmail.com
  */

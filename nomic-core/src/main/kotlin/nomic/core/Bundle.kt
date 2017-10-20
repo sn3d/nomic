@@ -15,7 +15,8 @@
  */
 package nomic.core
 
-import nomic.WtfException
+import nomic.core.exception.WtfException
+import nomic.core.script.BundleScript
 import java.io.ByteArrayInputStream
 import java.io.InputStream
 import java.nio.ByteBuffer
@@ -39,10 +40,10 @@ interface Bundle {
 	fun entries(filter: (Entry) -> Boolean = { true }): List<Entry>
 
 	companion object {
-		fun open(path: String): Bundle =
-			open(FileSystems.getDefault().getPath(path))
+		fun create(path: String): Bundle =
+			create(FileSystems.getDefault().getPath(path))
 
-		fun open(path: Path): Bundle =
+		fun create(path: Path): Bundle =
 			FileSystemBundle(path)
 	}
 }
@@ -55,10 +56,10 @@ val Bundle.script: Script
 	get() = BundleScript(this)
 
 fun String.asBundle(): Bundle =
-	Bundle.open(this)
+	Bundle.create(this)
 
 fun String.asBundleFrom(fs: FileSystem): Bundle =
-	Bundle.open(fs.getPath(this))
+	Bundle.create(fs.getPath(this))
 
 //-------------------------------------------------------------------------------------------------
 // implementations

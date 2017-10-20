@@ -1,4 +1,6 @@
-package nomic
+package nomic.core
+
+import nomic.core.exception.RequiredConfigPropertyException
 
 /**
  * @author zdenko.vrabel@wirecard.com

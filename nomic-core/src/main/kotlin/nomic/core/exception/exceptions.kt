@@ -1,4 +1,4 @@
-package nomic
+package nomic.core.exception
 
 import nomic.core.Box
 import nomic.core.BoxRef

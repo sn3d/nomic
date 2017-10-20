@@ -15,9 +15,9 @@
  */
 package nomic.hdfs
 
-import nomic.NomicConfig
-import nomic.RequiredConfigPropertyException
-import nomic.WtfException
+import nomic.core.NomicConfig
+import nomic.core.exception.RequiredConfigPropertyException
+import nomic.core.exception.WtfException
 import nomic.core.*
 import nomic.hdfs.adapter.HdfsAdapter
 import nomic.hdfs.adapter.HdfsSimulator

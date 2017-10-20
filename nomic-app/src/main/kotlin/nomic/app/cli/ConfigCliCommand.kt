@@ -16,7 +16,7 @@
 package nomic.app.cli
 
 import nomic.app.NomicApp
-import nomic.app.TypesafeConfig
+import nomic.app.config.TypesafeConfig
 
 /**
  * @author vrabel.zdenko@gmail.com

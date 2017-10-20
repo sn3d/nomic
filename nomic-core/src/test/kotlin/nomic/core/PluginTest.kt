@@ -15,6 +15,8 @@
  */
 package nomic.core
 
+import nomic.core.fact.NameFact
+import nomic.core.fact.VersionFact
 import org.junit.Test
 
 
@@ -56,7 +58,7 @@ private class TestPlugin : Plugin() {
 class PluginTest {
 
 	@Test
-	fun testFacts() {
+	fun `the plugin should route the facts into correct handlers`() {
 		val plugin = TestPlugin()
 		plugin.commit(BundledBox.empty, NameFact("Harry Potter"))
 		plugin.commit(BundledBox.empty, VersionFact("1.0"))

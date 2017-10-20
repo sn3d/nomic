@@ -18,6 +18,7 @@ package nomic.db
 import com.google.common.jimfs.Configuration
 import com.google.common.jimfs.Jimfs
 import nomic.core.*
+import nomic.core.fact.RequireFact
 import nomic.hdfs.adapter.HdfsSimulator
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -42,7 +43,7 @@ class AvroDbTest {
 	}
 
 	@Test
-	fun `save and load set of boxes into Avro DB`() {
+	fun `when you save boxes into DB, the boxes should be listed via DB`() {
 
 		// prepare 3 boxes 'app-1', 'app-2' and 'app-3'
 		// where 'app-3' depends on 'app-1' and 'app-2'
@@ -99,7 +100,52 @@ class AvroDbTest {
 
 
 	@Test
-	fun `delete the installed box`() {
+	fun `box with dependencies should be listed as dependant in dependency box`() {
+		// create 3 boxes where app-2 depends -> app-1 and app-3 depends -> app-1
+		val boxes = listOf(
+			BundledBox(
+				group = "examples",
+				name = "app-1",
+				version = "1.0",
+				bundle = InMemoryBundle("/nomic.box" to ByteBuffer.wrap("Hello Script".toByteArray()))
+			),
+			BundledBox(
+				group = "examples",
+				name = "app-2",
+				version = "1.0",
+				bundle = InMemoryBundle("/nomic.box" to ByteBuffer.wrap("Hello Script 2".toByteArray())),
+				facts = listOf(
+					RequireFact(BoxRef(group = "examples", name = "app-1", version = "1.0"))
+				)
+			),
+			BundledBox(
+				group = "examples",
+				name = "app-3",
+				version = "1.0",
+				bundle = InMemoryBundle("/nomic.box" to ByteBuffer.wrap("Hello Script 3".toByteArray())),
+				facts = listOf(
+					RequireFact(BoxRef(group = "examples", name = "app-1", version = "1.0"))
+				)
+			)
+		)
+
+		db.insertOrUpdate(boxes[0])
+		db.insertOrUpdate(boxes[1])
+		db.insertOrUpdate(boxes[2])
+
+		// get dependants of app-1
+		val dependants = db.dependantsOf(BoxRef.parse("examples:app-1:1.0"))
+
+		assertThat(dependants)
+			.contains(
+				BoxRef.parse("examples:app-2:1.0"),
+				BoxRef.parse("examples:app-3:1.0")
+			)
+	}
+
+
+	@Test
+	fun `when you delete the installed box, the box should be missing in DB`() {
 		// prepare and save box
 		db.insertOrUpdate(
 			BundledBox(
@@ -122,7 +168,7 @@ class AvroDbTest {
 
 
 	@Test
-	fun `save box with new version`() {
+	fun `when you save box with new version, the version should be increased and files from new version should be available`() {
 		// prepare and save box
 		var ref = db.insertOrUpdate(
 			BundledBox(
@@ -137,24 +183,23 @@ class AvroDbTest {
 		assertThat(existingBox?.ref()).isEqualTo(BoxRef(group = "examples", name = "app-for-upgrade", version = "1.0"))
 
 		// upgrade to next version
-		ref = db.insertOrUpdate(
+		db.insertOrUpdate(
 			BundledBox(
 				group = "examples",
 				name = "app-for-upgrade",
 				version = "2.0",
 				bundle = InMemoryBundle("/nomic.box" to ByteBuffer.wrap("Hello Script".toByteArray()))
 			)
-		).ref()
+		)
 
 		val boxes = db.loadAll().map(Box::ref);
-
 		assertThat(boxes)
 			.contains(BoxRef(group = "examples", name = "app-for-upgrade", version = "2.0"))
 			.doesNotContain(BoxRef(group = "examples", name = "app-for-upgrade", version = "1.0"))
 	}
 
 	@Test
-	fun `save box with same name but different group`() {
+	fun `saving box with same name but different group should create 2 boxes with same name but in different group`() {
 
 		// insert box with 'examples' group
 		db.insertOrUpdate(

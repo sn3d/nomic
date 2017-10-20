@@ -15,6 +15,10 @@
  */
 package nomic.core
 
+import nomic.core.fact.GroupFact
+import nomic.core.fact.NameFact
+import nomic.core.fact.VersionFact
+import nomic.core.script.BundleScript
 import java.nio.ByteBuffer
 
 /**

@@ -15,7 +15,7 @@
  */
 package nomic.hive.dsl
 
-import nomic.core.ClasspathScript
+import nomic.core.script.ClasspathScript
 import nomic.hive.SchemaFact
 import org.assertj.core.api.Assertions
 import org.junit.Test

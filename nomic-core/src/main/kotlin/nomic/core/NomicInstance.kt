@@ -1,4 +1,4 @@
-package nomic
+package nomic.core
 
 import nomic.core.*
 
@@ -11,7 +11,7 @@ interface NomicInstance {
 	/**
 	 * Method compile bundle into [BundledBox]
 	 */
-	fun open(bundle: Bundle): BundledBox
+	fun compile(bundle: Bundle): BundledBox
 
 	/**
 	 * compile the bundle and install it if it's not installed yet.
@@ -20,7 +20,7 @@ interface NomicInstance {
 	 *        even if box is already present. It's good for
 	 *        fixing bad installations.
 	 */
-    fun install(bundle: Bundle, force: Boolean = false)
+    fun install(bundle: Bundle, force: Boolean = false): BoxRef
 
 	/**
 	 * compile the bundle and upgrade it, or install if it's not

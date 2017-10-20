@@ -2,9 +2,9 @@ package nomic.itest.steps;
 
 import net.thucydides.core.annotations.Step;
 import nomic.Nomic;
-import nomic.NomicConfig;
-import nomic.NomicInstance;
-import nomic.app.TypesafeConfig;
+import nomic.core.NomicConfig;
+import nomic.core.NomicInstance;
+import nomic.app.config.TypesafeConfig;
 import nomic.box.BoxInfo;
 import nomic.box.InstalledBox;
 import nomic.bundle.Bundle;

@@ -1,0 +1,7 @@
+name = "submodule-c"
+group = "multimodule"
+version = "1.0.0"
+
+hdfs {
+    resource "file-c.txt"
+}

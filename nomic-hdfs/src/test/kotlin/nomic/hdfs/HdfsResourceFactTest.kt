@@ -55,7 +55,7 @@ class HdfsResourceFactTest {
 
 
 	@Test
-	fun testCommitAndRollbackResource() {
+	fun `commit and rollback resource fact`() {
 		var fact: Fact
 		fact = ResourceFact(source = "/test/file1.txt")
 
@@ -72,7 +72,7 @@ class HdfsResourceFactTest {
 
 
 	@Test
-	fun testCommitAndRollbackResourceWithDifferentDest() {
+	fun `the resource fact with different destination should create file on this destination`() {
 		var fact: Fact
 		fact = ResourceFact(source = "/test/file1.txt", dest = "/other/dir/file1.txt")
 
@@ -89,7 +89,7 @@ class HdfsResourceFactTest {
 
 
 	@Test
-	fun testCommitAndRollbackResourceWithKeepIt() {
+	fun `the resource fact with KeepIt set to true with different destination should not be removed`() {
 		var fact: Fact
 		fact = ResourceFact(source = "/test/file1.txt", dest = "/keepit.txt", keepIt = true)
 

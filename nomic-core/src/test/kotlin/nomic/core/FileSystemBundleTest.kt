@@ -59,7 +59,7 @@ class FileSystemBundleTest {
 	}
 
 	@Test
-	fun testSimpleBundle() {
+	fun `load the simple bundle`() {
 
 		val bundle = "/test-data/simple-bundle".asBundleFrom(fs)
 		val entry = bundle.entry("nomic.box")
@@ -73,7 +73,7 @@ class FileSystemBundleTest {
 	}
 
 	@Test
-	fun testIterateOverBundle() {
+	fun `testing list of entities in bundle`() {
 		val bundle = "/test-data/simple-bundle".asBundleFrom(fs)
 
 		val allEntries = bundle.entries()
