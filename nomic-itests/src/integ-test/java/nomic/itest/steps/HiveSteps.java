@@ -4,7 +4,8 @@ import net.thucydides.core.annotations.Step;
 import nomic.core.NomicConfig;
 import nomic.app.config.TypesafeConfig;
 import nomic.hive.InvalidHiveQueryException;
-import nomic.hive.plugin.HivePlugin;
+import nomic.hive.adapter.JdbcHiveAdapter;
+
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -30,15 +31,14 @@ public class HiveSteps {
 	public void checkIfSchemeExist(String scheme) {
 		// connect to Hive
 		NomicConfig config = TypesafeConfig.Companion.loadDefaultConfiguration();
-		HivePlugin hive = HivePlugin.Companion.createPlugin(config);
-
+		JdbcHiveAdapter hive = new JdbcHiveAdapter(config.get("hive.jdbc.url"), config.get("hive.user"), config.get("hive.password"));
 		hive.exec("SHOW TABLES IN NOMIC_TEST");
 	}
 
 	@Step
 	public void dropTableIfExist(String table) {
 		NomicConfig config = TypesafeConfig.Companion.loadDefaultConfiguration();
-		dropTableIfExist(config.getHiveSchema(), table);
+		dropTableIfExist(config.getDefaultSchema(), table);
 	}
 
 
@@ -46,7 +46,7 @@ public class HiveSteps {
 	public void dropTableIfExist(String schema, String table) {
 		// connect to Hive
 		NomicConfig config = TypesafeConfig.Companion.loadDefaultConfiguration();
-		HivePlugin hive = HivePlugin.Companion.createPlugin(config);
+		JdbcHiveAdapter hive = new JdbcHiveAdapter(config.get("hive.jdbc.url"), config.get("hive.user"), config.get("hive.password"));
 		hive.exec("DROP TABLE " + schema + "." + table);
 	}
 
@@ -57,7 +57,7 @@ public class HiveSteps {
 
 	private boolean tableExist(String table) {
 		NomicConfig config = TypesafeConfig.Companion.loadDefaultConfiguration();
-		return tableExist(config.getHiveSchema(), table);
+		return tableExist(config.getDefaultSchema(), table);
 	}
 
 
@@ -65,7 +65,7 @@ public class HiveSteps {
 		try {
 			// connect to Hive
 			NomicConfig config = TypesafeConfig.Companion.loadDefaultConfiguration();
-			HivePlugin hive = new HivePlugin(config.getHiveJdbcUrl(), config.getHiveSchema(), config.getHiveUsername(), config.getHivePassword());
+			JdbcHiveAdapter hive = new JdbcHiveAdapter(config.get("hive.jdbc.url"), config.get("hive.user"), config.get("hive.password"));
 
 			// check the table existence
 			hive.exec("SELECT * FROM " + schema + "." + table);

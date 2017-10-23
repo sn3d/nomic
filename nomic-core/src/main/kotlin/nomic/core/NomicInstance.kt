@@ -9,6 +9,11 @@ import nomic.core.*
 interface NomicInstance {
 
 	/**
+	 * ref. to how instance is configured
+	 */
+	val config: NomicConfig
+
+	/**
 	 * Method compile bundle into [BundledBox]
 	 */
 	fun compile(bundle: Bundle): BundledBox

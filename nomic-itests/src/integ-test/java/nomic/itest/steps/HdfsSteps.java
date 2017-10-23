@@ -3,8 +3,8 @@ package nomic.itest.steps;
 import net.thucydides.core.annotations.Step;
 import nomic.core.NomicConfig;
 import nomic.app.config.TypesafeConfig;
-import nomic.hdfs.HdfsAdapter;
-import nomic.hdfs.plugin.HdfsPlugin;
+import nomic.hdfs.HdfsPlugin;
+import nomic.hdfs.adapter.HdfsAdapter;
 import org.apache.commons.io.IOUtils;
 
 
@@ -22,7 +22,7 @@ public class HdfsSteps {
 	@Step
 	public void fileOrDirExist(String path) {
 		NomicConfig config = TypesafeConfig.Companion.loadDefaultConfiguration();
-		HdfsAdapter hdfs = HdfsPlugin.Companion.createAdapter(config);
+		HdfsAdapter hdfs = HdfsPlugin.Companion.initRealHdfs(config).getHdfs();
 		assertThat(hdfs.exist(path)).as("Check if the file or directory %s exist", path).isTrue();
 	}
 
@@ -30,7 +30,7 @@ public class HdfsSteps {
 	@Step
 	public void fileOrDirNotExist(String path) {
 		NomicConfig config = TypesafeConfig.Companion.loadDefaultConfiguration();
-		HdfsAdapter hdfs = HdfsPlugin.Companion.createAdapter(config);
+		HdfsAdapter hdfs = HdfsPlugin.Companion.initRealHdfs(config).getHdfs();
 		assertThat(hdfs.exist(path)).as("Check if the file or directory %s exist", path).isFalse();
 	}
 
@@ -38,7 +38,7 @@ public class HdfsSteps {
 	@Step
 	public String loadFileAsText(String path) {
 		NomicConfig config = TypesafeConfig.Companion.loadDefaultConfiguration();
-		HdfsAdapter hdfs = HdfsPlugin.Companion.createAdapter(config);
+		HdfsAdapter hdfs = HdfsPlugin.Companion.initRealHdfs(config).getHdfs();
 		try (
 			InputStreamReader reader = new InputStreamReader(hdfs.open(path))
 		) {

@@ -21,6 +21,7 @@ import nomic.core.*
 import nomic.core.fact.GroupFact
 import nomic.core.fact.NameFact
 import nomic.core.fact.VersionFact
+import nomic.core.script.FileScript
 import org.codehaus.groovy.control.CompilerConfiguration
 import org.codehaus.groovy.control.customizers.ImportCustomizer
 
@@ -86,6 +87,7 @@ class Compiler {
 		}
 
 		fun compile(script: Script): List<Fact> = defaultCompiler.compile(script)
+		fun compile(path: String): List<Fact> = defaultCompiler.compile(FileScript(path))
 	}
 
 
