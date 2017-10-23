@@ -36,5 +36,9 @@ data class BoxRef(
 			return BoxRef(group = values[0], name = values[1], version = values[2])
 		}
 	}
+
+	override fun toString(): String {
+		return "$group:$name:$version"
+	}
 }
 

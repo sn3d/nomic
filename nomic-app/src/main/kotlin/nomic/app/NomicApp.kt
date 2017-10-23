@@ -36,7 +36,7 @@ class NomicApp : NomicInstance {
 	// properties & construction
 	//-------------------------------------------------------------------------------------------------
 
-	val config: NomicConfig
+	override val config: NomicConfig
 	private val compiler: Compiler
 	private val plugins: List<Plugin>
 	private val hdfs: HdfsAdapter

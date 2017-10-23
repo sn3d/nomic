@@ -20,6 +20,9 @@ import nomic.core.Bundle
 import nomic.core.Script
 import java.io.Reader
 import java.io.StringReader
+import java.nio.file.FileSystems
+import java.nio.file.Files
+import java.nio.file.Path
 
 
 /**
@@ -46,4 +49,15 @@ class BundleScript(val bundle: Bundle) : Script {
 class ClasspathScript(val resource: String) : Script {
 	override fun open(): Reader =
 		this.javaClass.getResourceAsStream(resource).reader()
+}
+
+/**
+ * this implementation representing [Script] on Filesystem
+ */
+class FileScript(val path: Path) : Script {
+
+	constructor(path: String) : this(FileSystems.getDefault().getPath(path))
+
+	override fun open(): Reader =
+		Files.newInputStream(path).reader()
 }
