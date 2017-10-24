@@ -23,7 +23,7 @@ The documentation is available in [GitHub Wiki](https://github.com/sn3d/nomic/wi
 
 ## License
 
-   Copyright 2017 vrabel.zdenko@gmauil.com
+   Copyright 2017 vrabel.zdenko@gmail.com
 
    Licensed under the [Apache License, Version 2.0](./LICENSE)
     
