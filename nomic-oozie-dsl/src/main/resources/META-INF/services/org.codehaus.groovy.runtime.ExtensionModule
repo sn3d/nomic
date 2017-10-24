@@ -1,0 +1,3 @@
+moduleName = nomic-oozie-dsl
+moduleVersion = 1.0
+extensionClasses = nomic.oozie.dsl.ScriptExtension
