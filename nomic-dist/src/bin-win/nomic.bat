@@ -21,7 +21,7 @@ set NOMIC_CONF=%NOMIC_HOME%\conf\nomic.conf
 :gotNomicConf
 
 :exec
-SET NOMIC_ALL_OPTS="-Dconfig.file=%NOMIC_CONF% -Dlog4j.configuration=file:%NOMIC_HOME%\conf\log4j.xml %JAVA_OPTS% %NOMIC_OPTS%"
+SET NOMIC_ALL_OPTS=-Dconfig.file=%NOMIC_CONF% -Dlog4j.configuration=file:%NOMIC_HOME%\conf\log4j.xml -Dnomic.home=%NOMIC_HOME% %JAVA_OPTS% %NOMIC_OPTS%
 call java %NOMIC_ALL_OPTS% -jar %NOMIC_HOME%\lib\nomic.jar %*
 
 :end
