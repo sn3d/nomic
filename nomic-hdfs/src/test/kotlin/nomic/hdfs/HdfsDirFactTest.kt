@@ -41,6 +41,7 @@ class HdfsDirFactTest {
 		// prepare FS
 		fs = Jimfs.newFileSystem(Configuration.unix());
 		Files.createDirectories(fs.getPath("/hdfs"));
+		Files.createDirectories(fs.getPath("/bundle"));
 
 		// create box as source
 		box = BundledBox("/bundle".asBundleFrom(fs));
