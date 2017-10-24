@@ -3,12 +3,13 @@ package nomic.core.exception
 import nomic.core.Box
 import nomic.core.BoxRef
 import nomic.core.Bundle
-
+import java.nio.file.Path
 /**
  * @author zdenko.vrabel@wirecard.com
  */
 class InvalidPathInBundleException(message: String) : RuntimeException(message)
 class InvalidBundleException(message: String) : RuntimeException(message)
+class BundleDoesNotExistException(path: Path) : RuntimeException("The bundle on path '${path.toAbsolutePath()}' does not exist. Check if path is correct.")
 class NotInstalledBoxException(box: Box): RuntimeException("The ${box.group}:${box.name} must be installed first!")
 class BoxAlreadyInstalledException(box: Box): RuntimeException("The ${box.group}:${box.name} is already installed")
 class BoxNotInstalledException(box: BoxRef): RuntimeException("The ${box.group}:${box.name} is not installed")

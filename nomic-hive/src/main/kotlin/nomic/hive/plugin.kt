@@ -77,7 +77,7 @@ private class TableHandler(private val plugin: HivePlugin, private val hive: Hiv
 
 	override fun rollback(box: InstalledBox, fact: TableFact) {
 		if (!fact.keepIt) {
-			hive.exec("DROP TABLE IF EXITS ${fact.schema}.${fact.table}")
+			hive.exec("DROP TABLE IF EXISTS ${fact.schema}.${fact.table}")
 		}
 	}
 
