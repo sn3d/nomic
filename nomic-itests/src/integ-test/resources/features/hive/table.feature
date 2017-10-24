@@ -8,6 +8,7 @@ Feature: Hive 'table'
     And table "users" in hive must exist
     And the schema "nomic_test" must be created
 
+  @debug
   Scenario: Uninstall box with hive table
     Given the box "../nomic-examples/hive-advanced" is installed
     When Uninstall the "nomic-examples:hive-advanced:1.0.0" box

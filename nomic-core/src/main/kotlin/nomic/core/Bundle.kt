@@ -15,6 +15,7 @@
  */
 package nomic.core
 
+import nomic.core.exception.BundleDoesNotExistException
 import nomic.core.exception.WtfException
 import nomic.core.script.BundleScript
 import java.io.ByteArrayInputStream
@@ -43,8 +44,12 @@ interface Bundle {
 		fun create(path: String): Bundle =
 			create(FileSystems.getDefault().getPath(path))
 
-		fun create(path: Path): Bundle =
-			FileSystemBundle(path)
+		fun create(path: Path): Bundle {
+			if (!Files.isDirectory(path)) {
+				throw BundleDoesNotExistException(path)
+			}
+			return FileSystemBundle(path)
+		}
 	}
 }
 
