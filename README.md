@@ -12,7 +12,7 @@ with own DSL.
 
 You can easily build distribution of nomic from source code by executing command project root:
 
-./gradlew assembly
+    ./gradlew assembly
 
 After command is succesfully executed, you can find ZIP, TAR and also RPM distribution in `nomic-dist/build/distributions` 
 folder. Now you can continue with installation depends on distribution you pick.
