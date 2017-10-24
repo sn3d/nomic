@@ -3,8 +3,9 @@ package nomic.itest.stepdef;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.When;
 import net.thucydides.core.annotations.Steps;
-import nomic.box.Box;
-import nomic.itest.steps.BoxSteps;
+import nomic.app.BoxFactory;
+import nomic.core.Box;
+import nomic.core.BoxKt;
 import nomic.itest.steps.HdfsSteps;
 import nomic.itest.steps.HiveSteps;
 import nomic.itest.steps.NomicSteps;
@@ -23,14 +24,15 @@ public class SharedStepDefs {
 	@Steps
 	public HiveSteps hiveSteps;
 
-	@Steps
-	public BoxSteps boxSteps;
-
 	@Given("^the box \"([^\"]*)\" is installed$")
 	public void theBoxIsInstalled(String path) throws Throwable {
 
-		Box box = boxSteps.loadBox(path);
-		String boxExpr = box.getInfo().toString();
+		Box box = BoxFactory.INSTANCE.compileBundle(path);
+		if (box == null) {
+			throw new NullPointerException("for some reason box " + path + " cannot be loaded");
+		}
+
+		String boxExpr = BoxKt.ref(box).toString();
 		boolean isInstalled = nomicSteps.isBoxInstalled(boxExpr);
 		if (isInstalled) {
 			nomicSteps.uninstallBox(boxExpr);
