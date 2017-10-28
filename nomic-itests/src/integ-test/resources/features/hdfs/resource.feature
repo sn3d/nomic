@@ -1,5 +1,6 @@
 Feature: HDFS Resource
 
+  @debug
   Scenario: Install box with HDFS resources
     Given the "nomic-examples:hello-world" box is not installed yet
     When install the box from "../nomic-examples/hello-world"

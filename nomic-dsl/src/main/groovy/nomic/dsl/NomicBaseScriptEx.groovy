@@ -30,7 +30,7 @@ abstract class NomicBaseScriptEx extends Script {
     // global parameters
     //-------------------------------------------------------------------------------------------------
 
-    def getName() {
+    def String getName() {
         return this.binding.variables['name']
     }
 
@@ -38,7 +38,7 @@ abstract class NomicBaseScriptEx extends Script {
         this.binding.variables['name'] = name
     }
 
-    def getGroup() {
+    def String getGroup() {
         return this.binding.variables['group']
     }
 
@@ -46,7 +46,7 @@ abstract class NomicBaseScriptEx extends Script {
         this.binding.variables['group'] = group
     }
 
-    def getVersion() {
+    def String getVersion() {
         return this.binding.variables['version']
     }
 
@@ -54,7 +54,7 @@ abstract class NomicBaseScriptEx extends Script {
         this.binding.variables['version'] = version
     }
 
-    def getAppDir() {
+    def String getAppDir() {
         return this.binding.variables['appDir']
     }
 
@@ -62,7 +62,7 @@ abstract class NomicBaseScriptEx extends Script {
         this.binding.variables['appDir'] = appDir
     }
 
-    def getHomeDir() {
+    def String getHomeDir() {
         return this.binding.variables['homeDir']
     }
 
@@ -70,7 +70,7 @@ abstract class NomicBaseScriptEx extends Script {
         this.binding.variables['homeDir'] = homeDir
     }
 
-    def getUser() {
+    def String getUser() {
         return this.binding.variables['user']
     }
 
@@ -78,13 +78,18 @@ abstract class NomicBaseScriptEx extends Script {
         this.binding.variables['user'] = user
     }
 
-    def getDefaultSchema() {
+    def String getDefaultSchema() {
         return this.binding.variables['defaultSchema'].toString()
     }
 
     void setDefaultSchema(String defaultSchema) {
         this.binding.variables['defaultSchema'] = defaultSchema
     }
+
+    def String getNameNode() {
+        return this.binding.variables['nameNode']
+    }
+
 
     //-------------------------------------------------------------------------------------------------
     // global methods

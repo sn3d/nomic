@@ -22,5 +22,6 @@ interface HdfsAdapter {
     fun listFiles(path: String, recursive: Boolean): Sequence<String>
 
     val homeDirectory: String;
+    val nameNode: String;
 
 }

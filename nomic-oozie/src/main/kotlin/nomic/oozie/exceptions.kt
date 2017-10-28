@@ -15,6 +15,10 @@
  */
 package nomic.oozie
 
+import nomic.core.Bundle
+
 /**
  * @author vrabel.zdenko@gmail.com
  */
+class OozieServerException(message: String) : RuntimeException("The oozie server returns error: ${message}")
+class CoordinatorXmlNotFoundException(path: String, bundle:Bundle) : RuntimeException("The coordinator xml file ${path} is missing in bundle ${bundle}")

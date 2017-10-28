@@ -31,7 +31,7 @@ object InstallCliCommand {
 			exitProcess(1)
 		}
 
-		val app = NomicApp(TypesafeConfig.loadDefaultConfiguration())
+		val app = NomicApp.createDefault()
 		val bundle = Bundle.create(args[0])
 		app.install(bundle)
 	}

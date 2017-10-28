@@ -16,7 +16,26 @@
 package nomic.oozie.adapter
 
 /**
+ * representing Job in Oozie
+ */
+data class OozieJob(val jobId: String, val jobName: String = "", val jobPath: String = "", val status: String = "")
+
+
+/**
  * @author vrabel.zdenko@gmail.com
  */
 interface OozieAdapter {
+
+	fun findJob(jobId: String): OozieJob
+	fun createAndStartJob(params:Map<String, String>):OozieJob
+	fun killJob(job: OozieJob)
+	fun findRunningCoordinatorJobs(filter: (OozieJob) -> Boolean = { _ -> true}): List<OozieJob>
+
+	fun createAndStartJob(vararg params:Pair<String, String>):OozieJob =
+		createAndStartJob(params.toMap())
+
+	fun killJob(jobId: String) =
+		killJob(OozieJob(jobId = jobId))
+
+
 }

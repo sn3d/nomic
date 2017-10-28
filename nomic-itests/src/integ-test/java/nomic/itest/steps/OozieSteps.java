@@ -13,14 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nomic.oozie
-
-import nomic.core.Fact
+package nomic.itest.steps;
 
 /**
- * This fact is declaring where will be uploaded the [coordinatorXml] in HDFS
- * and how will be executed via OOZIE with given [parameters]
- *
  * @author vrabel.zdenko@gmail.com
  */
-data class CoordinatorFact(val name: String, val xmlSource: String, val hdfsDest: String, val parameters: Map<String, String>, val keepIt: Boolean) : Fact
+public class OozieSteps {
+
+
+	public void checkIfOozieJobExist(String name) {
+
+	}
+
+}

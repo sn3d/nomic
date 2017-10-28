@@ -132,6 +132,9 @@ project('nomic-hive-dsl') {
 project('nomic-oozie') {
 	dependencies {
 		compile project(':nomic-core')
+		compile project(':nomic-hdfs')
+		compile group: "com.mashape.unirest", name: "unirest-java", version: "1.4.9"
+		testCompile 'com.github.tomakehurst:wiremock:2.10.1'
 	}
 }
 

@@ -15,6 +15,76 @@
  */
 package nomic.oozie
 
+import nomic.core.*
+import nomic.core.exception.RequiredConfigPropertyException
+import nomic.oozie.adapter.OozieAdapter
+import nomic.hdfs.adapter.HdfsAdapter
+import nomic.hdfs.adapter.copyToHdfs
+import nomic.oozie.adapter.RestOozieAdapter
+
 /**
+ * Route OOZIE related [Fact]s to concrete handlers.
+ *
  * @author vrabel.zdenko@gmail.com
  */
+class OoziePlugin(
+	private val oozie: OozieAdapter,
+	private val hdfs: HdfsAdapter,
+	private val jobTracker: String) : Plugin()
+{
+
+	companion object {
+
+		fun init(config: NomicConfig, hdfs: HdfsAdapter): OoziePlugin =
+			OoziePlugin(
+				hdfs = hdfs,
+				oozie = RestOozieAdapter(config["oozie.url"] ?: throw RequiredConfigPropertyException("oozie.url")),
+				jobTracker = config["oozie.jobTracker"] ?: throw RequiredConfigPropertyException("oozie.jobTracker")
+			)
+
+	}
+
+	override fun configureMapping(): FactMapping =
+		listOf(
+			CoordinatorFact::class.java to { CoordinatorFactHandler(oozie, hdfs) }
+		)
+}
+
+
+/**
+ * This handler is processing [CoordinatorFact]
+ */
+class CoordinatorFactHandler(private val oozie: OozieAdapter, private val hdfs: HdfsAdapter) : FactHandler<CoordinatorFact> {
+
+	/**
+	 * commiting the [CoordinatorFact]
+	 */
+	override fun commit(box: BundledBox, fact: CoordinatorFact) {
+		val entry = box.entry(fact.xmlSource) ?: throw CoordinatorXmlNotFoundException(fact.xmlSource, box)
+		hdfs.copyToHdfs(entry, fact.hdfsDest)
+		oozie.createAndStartJob(fact.parameters)
+	}
+
+	/**
+	 * rollback the [CoordinatorFact]
+	 */
+	override fun rollback(box: InstalledBox, fact: CoordinatorFact) {
+		if (!fact.keepIt) {
+			val coordinator = readCoordinatorXml(fact)
+			coordinator.findAndKill()
+			hdfs.delete(fact.hdfsDest)
+		}
+	}
+
+	private fun readCoordinatorXml(fact:CoordinatorFact) =
+		hdfs.open(fact.hdfsDest).use {
+			OozieCoordinatorXml(it)
+		}
+
+	private fun OozieCoordinatorXml.findAndKill() {
+		val job = oozie.findRunningCoordinatorJobs({ job -> job.jobName == appName }).first()
+		oozie.killJob(job.jobId)
+
+	}
+
+}

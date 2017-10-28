@@ -31,8 +31,8 @@ object RemoveCliCommand {
 			exitProcess(1)
 		}
 
+		val app = NomicApp.createDefault()
 		val ref = BoxRef.parse(args[0])
-		val app = NomicApp(TypesafeConfig.loadDefaultConfiguration())
 		app.uninstall(ref)
 	}
 

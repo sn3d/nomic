@@ -15,12 +15,20 @@
  */
 package nomic.oozie
 
-import nomic.core.Fact
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.Test
 
 /**
- * This fact is declaring where will be uploaded the [coordinatorXml] in HDFS
- * and how will be executed via OOZIE with given [parameters]
- *
  * @author vrabel.zdenko@gmail.com
  */
-data class CoordinatorFact(val name: String, val xmlSource: String, val hdfsDest: String, val parameters: Map<String, String>, val keepIt: Boolean) : Fact
+class OozieCoordinatorXmlTest {
+
+	@Test
+	fun `parse simple daily coordinator`() {
+		this::class.java.getResourceAsStream("/daily.xml").use {
+			val coordinator = OozieCoordinatorXml(it)
+			val name = coordinator.appName
+			assertThat(name).isEqualToIgnoringCase("daily")
+		}
+	}
+}
