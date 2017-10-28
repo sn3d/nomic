@@ -1,0 +1,8 @@
+name = "test"
+group = "nomic"
+version = "1.0"
+
+oozie {
+    coordinator "relative-coordinator" from "coordinator.xml" to "custompath/coordinator-2.xml" parameters DATABASE_SCHEMA_PREFIX: "nomic", "user.name": user
+    coordinator "absolute-coordinator" from "coordinator.xml" to "/absolute/coordinator-3.xml" parameters DATABASE_SCHEMA_PREFIX: "nomic", "user.name": user
+}

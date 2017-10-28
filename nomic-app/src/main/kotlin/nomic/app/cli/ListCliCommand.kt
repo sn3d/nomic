@@ -26,7 +26,7 @@ import nomic.core.match
 object ListCliCommand {
 
 	fun main(args: Array<String>) {
-		val app = NomicApp(TypesafeConfig.loadDefaultConfiguration())
+		val app = NomicApp.createDefault()
 
 		// set expression filter if expression is available as args
 		val filter:(BoxRef) -> Boolean

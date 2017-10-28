@@ -45,6 +45,7 @@ import org.codehaus.groovy.control.customizers.ImportCustomizer
  * @property homeDir is mapped into 'homeDir' global variable in DSL script. Default value is /user/${user}
  * @property appDir is mapped into 'appDir' global variable in DSL script. Default value is /user/${user}/app
  * @property defaultSchema is mapped into 'defaultSchema' global variable in DSL script. Default value is $user
+ * @property nameNode is mapped into 'nameNode' global variable in DSL script. The default value is 'hdfs://localhost'
  *
  * @see compile
  * @see Descriptor
@@ -57,16 +58,18 @@ class Compiler {
 	val homeDir: String
 	val appDir: String
 	val defaultSchema: String
+	val nameNode: String
 
 	/**
 	 * parametrized constructor you can use when you need to
 	 * change some global variable.
 	 */
-	constructor(user: String = "", homeDir: String = "", appDir: String = "", defaultSchema: String = "") {
+	constructor(user: String = "", homeDir: String = "", appDir: String = "", defaultSchema: String = "", nameNode: String = "") {
 		this.user = user
 		this.homeDir = homeDir
 		this.appDir = appDir
 		this.defaultSchema = defaultSchema
+		this.nameNode = nameNode
 	}
 
 
@@ -78,6 +81,7 @@ class Compiler {
 		this.homeDir       = "/users/${user}"
 		this.appDir        = "${homeDir}/app"
 		this.defaultSchema = user
+		this.nameNode      = "hdfs://localhost"
 	}
 
 
@@ -133,6 +137,7 @@ class Compiler {
 		this.setVariable("appDir", appDir)
 		this.setVariable("homeDir", homeDir)
 		this.setVariable("defaultSchema", defaultSchema)
+		this.setVariable("nameNode", nameNode)
 	}
 
 

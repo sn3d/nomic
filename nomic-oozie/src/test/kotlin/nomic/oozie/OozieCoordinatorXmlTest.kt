@@ -13,31 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nomic.app.cli
+package nomic.oozie
 
-import nomic.app.NomicApp
-import nomic.app.config.TypesafeConfig
-import nomic.core.BoxRef
-import kotlin.system.exitProcess
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.Test
 
 /**
  * @author vrabel.zdenko@gmail.com
  */
-object RemoveCliCommand {
+class OozieCoordinatorXmlTest {
 
-	fun main(args: Array<String>) {
-		if (args.size < 1) {
-			printHelp()
-			exitProcess(1)
+	@Test
+	fun `parse simple daily coordinator`() {
+		this::class.java.getResourceAsStream("/daily.xml").use {
+			val coordinator = OozieCoordinatorXml(it)
+			val name = coordinator.appName
+			assertThat(name).isEqualToIgnoringCase("daily")
 		}
-
-		val app = NomicApp.createDefault()
-		val ref = BoxRef.parse(args[0])
-		app.uninstall(ref)
 	}
-
-	fun printHelp() {
-		println("nomic remove [box ref.]")
-	}
-
 }

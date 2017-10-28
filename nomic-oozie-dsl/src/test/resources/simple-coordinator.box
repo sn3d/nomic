@@ -1,0 +1,7 @@
+name = "test"
+group = "nomic"
+version = "1.0"
+
+oozie {
+    coordinator "coordinator.xml" parameters DATABASE_SCHEMA_PREFIX: "nomic", "user.name": user
+}

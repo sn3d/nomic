@@ -13,31 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nomic.app.cli
+package nomic.oozie
 
-import nomic.app.NomicApp
-import nomic.app.config.TypesafeConfig
-import nomic.core.BoxRef
-import kotlin.system.exitProcess
+import nomic.core.Fact
 
 /**
+ * This fact is declaring where will be uploaded the [coordinatorXml] in HDFS
+ * and how will be executed via OOZIE with given [parameters]
+ *
  * @author vrabel.zdenko@gmail.com
  */
-object RemoveCliCommand {
-
-	fun main(args: Array<String>) {
-		if (args.size < 1) {
-			printHelp()
-			exitProcess(1)
-		}
-
-		val app = NomicApp.createDefault()
-		val ref = BoxRef.parse(args[0])
-		app.uninstall(ref)
-	}
-
-	fun printHelp() {
-		println("nomic remove [box ref.]")
-	}
-
-}
+data class CoordinatorFact(val name: String, val xmlSource: String, val hdfsDest: String, val parameters: Map<String, String>, val keepIt: Boolean) : Fact

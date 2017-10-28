@@ -13,31 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nomic.app.cli
-
-import nomic.app.NomicApp
-import nomic.app.config.TypesafeConfig
-import nomic.core.BoxRef
-import kotlin.system.exitProcess
+package nomic.itest.steps;
 
 /**
  * @author vrabel.zdenko@gmail.com
  */
-object RemoveCliCommand {
+public class OozieSteps {
 
-	fun main(args: Array<String>) {
-		if (args.size < 1) {
-			printHelp()
-			exitProcess(1)
-		}
 
-		val app = NomicApp.createDefault()
-		val ref = BoxRef.parse(args[0])
-		app.uninstall(ref)
-	}
+	public void checkIfOozieJobExist(String name) {
 
-	fun printHelp() {
-		println("nomic remove [box ref.]")
 	}
 
 }

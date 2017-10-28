@@ -41,8 +41,10 @@ interface Bundle {
 	fun entries(filter: (Entry) -> Boolean = { true }): List<Entry>
 
 	companion object {
+
 		fun create(path: String): Bundle =
 			create(FileSystems.getDefault().getPath(path))
+
 
 		fun create(path: Path): Bundle {
 			if (!Files.isDirectory(path)) {

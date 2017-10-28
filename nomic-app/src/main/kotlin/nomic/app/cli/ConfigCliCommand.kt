@@ -24,7 +24,7 @@ import nomic.app.config.TypesafeConfig
 object ConfigCliCommand {
 
 	fun main(args: Array<String>) {
-		val app = NomicApp(TypesafeConfig.loadDefaultConfiguration())
+		val app = NomicApp.createDefault()
 
 		println("nomic.user:                " + app.config["nomic.user"])
 		println("nomic.hdfs.home:           " + app.config["nomic.hdfs.home"])

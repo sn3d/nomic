@@ -13,31 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nomic.app.cli
+package nomic.oozie.adapter
 
-import nomic.app.NomicApp
-import nomic.app.config.TypesafeConfig
-import nomic.core.BoxRef
-import kotlin.system.exitProcess
+/**
+ * representing Job in Oozie
+ */
+data class OozieJob(val jobId: String, val jobName: String = "", val jobPath: String = "", val status: String = "")
+
 
 /**
  * @author vrabel.zdenko@gmail.com
  */
-object RemoveCliCommand {
+interface OozieAdapter {
 
-	fun main(args: Array<String>) {
-		if (args.size < 1) {
-			printHelp()
-			exitProcess(1)
-		}
+	fun findJob(jobId: String): OozieJob
+	fun createAndStartJob(params:Map<String, String>):OozieJob
+	fun killJob(job: OozieJob)
+	fun findRunningCoordinatorJobs(filter: (OozieJob) -> Boolean = { _ -> true}): List<OozieJob>
 
-		val app = NomicApp.createDefault()
-		val ref = BoxRef.parse(args[0])
-		app.uninstall(ref)
-	}
+	fun createAndStartJob(vararg params:Pair<String, String>):OozieJob =
+		createAndStartJob(params.toMap())
 
-	fun printHelp() {
-		println("nomic remove [box ref.]")
-	}
+	fun killJob(jobId: String) =
+		killJob(OozieJob(jobId = jobId))
+
 
 }

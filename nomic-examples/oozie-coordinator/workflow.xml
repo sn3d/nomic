@@ -1,0 +1,8 @@
+<workflow-app xmlns = "uri:oozie:workflow:0.4" name = "simple-workflow">
+    <start to = "create_dir" />
+    <action name="create_dir">
+        <fs><mkdir path='/app/oozie'/></fs>
+        <ok to = "end"/>
+    </action>
+    <end name="end"/>
+</workflow-app>

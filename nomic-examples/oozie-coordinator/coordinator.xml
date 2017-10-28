@@ -1,0 +1,13 @@
+<coordinator-app name="NOMIC_APP" frequency="60" start="2016-01-01T05:00Z" end="2020-01-01T06:00Z" timezone="UTC" xmlns="uri:oozie:coordinator:0.1">
+    <action>
+        <workflow>
+            <app-path>${appDir}/workflow.xml</app-path>
+            <configuration>
+                <property>
+                    <name>start_date</name>
+                    <value>2016-01-01T05:00Z</value>
+                </property>
+            </configuration>
+        </workflow>
+    </action>
+</coordinator-app>

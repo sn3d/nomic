@@ -109,6 +109,9 @@ class HdfsSimulator(val baseDir: Path) : HdfsAdapter {
         get() = "/user/" + System.getProperty("user.name")
 
 
+    override val nameNode: String
+        get() = "hdfs://localhost"
+
     /**
      * return sequence of all files in directory
      * @param [recursive] if scanning goes also recursive into sub-directories

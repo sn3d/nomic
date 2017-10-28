@@ -1,0 +1,19 @@
+def globalContext = context(filetypes: ['box', 'groovy' ])
+
+contribute(globalContext) {
+
+    method name: 'oozie', params: [
+            'c': Closure
+    ]
+
+    method name: 'oozie', params: [
+            'defaultSchema': String,
+            'c': Closure
+    ]
+
+    def call = enclosingCall("oozie")
+    if (call) {
+        delegatesTo(findClass('nomic.oozie.dsl.OozieContext'))
+    }
+}
+

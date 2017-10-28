@@ -1,0 +1,11 @@
+group = "nomic-examples"
+name = "oozie-coordinator"
+version = "1.0.0"
+
+hdfs {
+    resource "workflow.xml"
+}
+
+oozie {
+    coordinator "coordinator.xml" parameters "appDir": "${appDir}/${group}/${name}"
+}

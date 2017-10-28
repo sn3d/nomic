@@ -14,4 +14,5 @@ contribute(globalContext) {
     property name: "homeDir", type: 'String'
     property name: "appDir", type: 'String'
     property name: "defaultSchema", type: 'String'
+    property name: "nameNode", type: 'String'
 }

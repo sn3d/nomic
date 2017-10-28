@@ -15,6 +15,7 @@
  */
 package nomic.app
 
+import nomic.app.config.TypesafeConfig
 import nomic.compiler.Compiler
 import nomic.core.*
 import nomic.core.exception.BoxAlreadyInstalledException
@@ -26,6 +27,7 @@ import nomic.db.NomicDb
 import nomic.hdfs.HdfsPlugin
 import nomic.hdfs.adapter.HdfsAdapter
 import nomic.hive.HivePlugin
+import nomic.oozie.OoziePlugin
 
 /**
  * @author vrabel.zdenko@gmail.com
@@ -42,19 +44,9 @@ class NomicApp : NomicInstance {
 	private val hdfs: HdfsAdapter
 	private val db: NomicDb
 
-	constructor(config: NomicConfig) : this(config, HdfsPlugin.init(config), HivePlugin.init(config))
-
-	constructor(config: NomicConfig, vararg plugins: Plugin) : this(config, plugins.toList())
-
-	constructor(config: NomicConfig, plugins: List<Plugin>) {
+	private constructor(config: NomicConfig, plugins: List<Plugin>) {
 
 		this.plugins = plugins
-		this.compiler = Compiler(
-			user          = config.user,
-			homeDir       = config.hdfsHomeDir,
-			appDir        = config.hdfsAppDir,
-			defaultSchema = config.defaultSchema
-		)
 
 		this.hdfs = plugins.filterIsInstance(HdfsPlugin::class.java).firstOrNull()?.hdfs ?: throw WtfException()
 		this.db = AvroDb(
@@ -63,6 +55,25 @@ class NomicApp : NomicInstance {
 		)
 
 		this.config = this.Config(config)
+		this.compiler = Compiler(
+			user          = config.user,
+			homeDir       = config.hdfsHomeDir,
+			appDir        = config.hdfsAppDir,
+			defaultSchema = config.defaultSchema,
+			nameNode      = hdfs.nameNode
+		)
+	}
+
+	companion object {
+
+		@JvmStatic
+		fun createDefault(): NomicApp {
+			val config = TypesafeConfig.loadDefaultConfiguration()
+			val hdfsPlugin = HdfsPlugin.init(config)
+			val hivePlugin = HivePlugin.init(config)
+			val ooziePlugin = OoziePlugin.init(config, hdfsPlugin.hdfs)
+			return NomicApp(config, listOf(hdfsPlugin, hivePlugin, ooziePlugin))
+		}
 
 	}
 

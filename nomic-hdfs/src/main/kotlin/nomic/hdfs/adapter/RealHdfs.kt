@@ -47,6 +47,7 @@ class RealHdfs private constructor(conf: Configuration) : HdfsAdapter {
 			val conf = Configuration()
 			conf.addResource(FileInputStream(coreSiteXml))
 			conf.addResource(FileInputStream(hdfsSiteXml));
+			conf.reloadConfiguration()
 			return RealHdfs(conf)
 		}
 
@@ -84,4 +85,7 @@ class RealHdfs private constructor(conf: Configuration) : HdfsAdapter {
 
     override val homeDirectory: String
         get() = hdfs.homeDirectory.toUri().path
+
+	override val nameNode: String
+		get() = hdfs.conf.get("fs.defaultFS")
 }
