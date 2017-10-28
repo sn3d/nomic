@@ -83,7 +83,7 @@ class NomicFunctionalTest {
 			"nomic.default.schema" to "test"
 		)
 
-		app = NomicApp(conf, HdfsPlugin.initSimulator(conf, fs))
+		app = NomicApp(conf, listOf(HdfsPlugin.initSimulator(conf, fs)))
 	}
 
 

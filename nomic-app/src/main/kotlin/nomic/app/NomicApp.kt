@@ -44,7 +44,7 @@ class NomicApp : NomicInstance {
 	private val hdfs: HdfsAdapter
 	private val db: NomicDb
 
-	private constructor(config: NomicConfig, plugins: List<Plugin>) {
+	constructor(config: NomicConfig, plugins: List<Plugin>) {
 
 		this.plugins = plugins
 
