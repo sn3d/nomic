@@ -63,7 +63,11 @@ class RestOozieAdapter(val oozieUrl: String = "http://localhost:11000") : OozieA
 	 * killing the running job
 	 */
 	override fun killJob(job: OozieJob) {
-		Unirest.put("${oozieUrl}/oozie/v1/job/${job.jobId}?action=kill")
+		val resp = Unirest.put("${oozieUrl}/oozie/v1/job/${job.jobId}?action=kill").asString()
+		if (resp.headers.containsKey("oozie-error-code")) {
+			val message = resp.headers.getFirst("oozie-error-message")
+			throw OozieServerException(message)
+		}
 	}
 
 
@@ -73,7 +77,8 @@ class RestOozieAdapter(val oozieUrl: String = "http://localhost:11000") : OozieA
 	override fun createAndStartJob(params:Map<String, String>):OozieJob {
 		val resp =
 			Unirest.post("${oozieUrl}/oozie/v1/jobs?action=start")
-				.header("Content-Type", "application/xml;charset=UTF-8")
+				.header("Content-Type", "application/xml")
+				.header("Accept-Encoding", "gzip,deflate")
 				.body(paramsToXml(params))
 				.asString()
 

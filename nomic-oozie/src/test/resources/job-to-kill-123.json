@@ -1,0 +1,15 @@
+{
+  total: 1,
+  coordJobName: "NOMIC_APP",
+  coordJobPath: "/app/coordinator.xml",
+  timeZone: "UTC",
+  frequency: "60",
+  executionPolicy: "FIFO",
+  timeUnit: "MINUTE",
+  concurrency: 1,
+  coordJobId: "0000035-171025165840868-oozie-oozi-C",
+  status: "KILLED",
+  mat_throttling: 12,
+  timeOut: 120,
+  actions: []
+}

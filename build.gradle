@@ -27,7 +27,7 @@ allprojects { project ->
 		mavenCentral()
 		jcenter()
 	}
-
+	apply plugin: 'project-report'
 }
 
 subprojects { subproject ->
@@ -135,6 +135,10 @@ project('nomic-oozie') {
 		compile project(':nomic-hdfs')
 		compile group: "com.mashape.unirest", name: "unirest-java", version: "1.4.9"
 		testCompile 'com.github.tomakehurst:wiremock:2.10.1'
+	}
+
+	configurations {
+		all*.exclude group: 'javax.servlet', module: 'servlet-api'
 	}
 }
 

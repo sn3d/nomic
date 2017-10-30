@@ -18,42 +18,72 @@ package nomic.oozie.adapter
 import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration.options
 import com.github.tomakehurst.wiremock.junit.WireMockRule
+import com.github.tomakehurst.wiremock.stubbing.Scenario.STARTED
 import org.assertj.core.api.Assertions.assertThat
 
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
+import com.github.tomakehurst.wiremock.WireMockServer
+import org.junit.*
+
 
 /**
  * @author vrabel.zdenko@gmail.com
  */
 public class RestOozieAdapterTest {
 
-	@get:Rule
-	public val oozieServer: WireMockRule = WireMockRule(options().port(11000))
-
+	//@get:Rule
 	lateinit var adapter:RestOozieAdapter
 
+	companion object {
+		lateinit var oozieServer: WireMockServer
+
+		@BeforeClass @JvmStatic fun setupClass() {
+			oozieServer = WireMockServer(options().port(11000)) //No-args constructor will start on port 8080, no HTTPS
+
+			var json = RestOozieAdapterTest::class.java.getResourceAsStream("/oozie-coordinator-resp.json").reader().readText()
+			oozieServer.stubFor(
+				get(urlEqualTo("/oozie/v1/jobs?jobtype=coord&filter=status=RUNNING"))
+					.willReturn(okJson(json))
+			)
+
+			oozieServer.stubFor(
+				post(urlEqualTo("/oozie/v1/jobs?action=start"))
+					.withRequestBody(containing("<value>PATH</value>"))
+					.withHeader("Content-Type", equalTo("application/xml"))
+					.willReturn(okJson("{ id: 'job-123'}"))
+			)
+
+			oozieServer.stubFor(
+				put(urlEqualTo("/oozie/v1/job/0000214-171019175534879-oozie-oozi-C"))
+			)
+
+
+			// scenario 'kill the running job'
+			oozieServer.stubFor(
+				put("/oozie/v1/job/job-to-kill-123?action=kill").inScenario("kill the running job")
+					.whenScenarioStateIs(STARTED)
+					.willReturn(ok())
+					.willSetStateTo("KILLED")
+			)
+
+			json = RestOozieAdapterTest::class.java.getResourceAsStream("/job-to-kill-123.json").reader().readText()
+			oozieServer.stubFor(
+				get(urlEqualTo("/oozie/v1/job/job-to-kill-123")).inScenario("kill the running job")
+					.whenScenarioStateIs("KILLED")
+					.withHeader("Content-Type", equalTo("application/json"))
+					.willReturn(okJson(json))
+					.willSetStateTo("END")
+			)
+
+			oozieServer.start()
+		}
+
+		@AfterClass @JvmStatic fun stop() {
+			oozieServer.stop()
+		}
+	}
 
 	@Before
 	fun setup() {
-		var json = this.javaClass.getResourceAsStream("/oozie-coordinator-resp.json").reader().readText()
-		oozieServer.stubFor(
-			get(urlEqualTo("/oozie/v1/jobs?jobtype=coord&filter=status=RUNNING"))
-				.willReturn(okJson(json))
-		)
-
-		oozieServer.stubFor(
-			post(urlEqualTo("/oozie/v1/jobs?action=start"))
-				.withRequestBody(containing("<value>PATH</value>"))
-				.withHeader("Content-Type", equalTo("application/xml;charset=UTF-8"))
-				.willReturn(okJson("{ id: 'job-123'}"))
-		)
-
-		oozieServer.stubFor(
-			put(urlEqualTo("/oozie/v1/job/0000214-171019175534879-oozie-oozi-C"))
-		)
-
 		adapter = RestOozieAdapter()
 	}
 

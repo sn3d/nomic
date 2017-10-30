@@ -5,7 +5,7 @@
       "total": 0,
       "pauseTime": null,
       "coordJobName": "daily",
-      "coordJobPath": "hdfs://oozie-server:8020/app//coordinator.xml",
+      "coordJobPath": "hdfs://oozie-server:8020/app/coordinator.xml",
       "timeZone": "CET",
       "frequency": "1",
       "conf": null,
