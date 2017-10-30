@@ -54,8 +54,7 @@ public class RestOozieAdapterTest {
 			put(urlEqualTo("/oozie/v1/job/0000214-171019175534879-oozie-oozi-C"))
 		)
 
-		//adapter = RestOozieAdapter()
-		adapter = RestOozieAdapter("http://d-cldera-app02.wirecard.sys:11000")
+		adapter = RestOozieAdapter()
 	}
 
 	@Test
