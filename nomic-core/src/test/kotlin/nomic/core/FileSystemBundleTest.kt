@@ -82,4 +82,24 @@ class FileSystemBundleTest {
 		val entriesWithFile = bundle.entries({e -> e.name.contains("file-")})
 		assertThat(entriesWithFile).hasSize(3)
 	}
+
+
+	@Test
+	fun `get entry with slash on beginning`() {
+		val bundle = "/test-data/simple-bundle".asBundleFrom(fs)
+		val entry = bundle.entry("/dir-1/file-1.txt")!!
+		val stream = entry.openInputStream()
+		assertThat(stream).isNotNull()
+	}
+
+
+	@Test
+	fun `get entry without slash on beginning`() {
+		val bundle = "/test-data/simple-bundle".asBundleFrom(fs)
+		val entry = bundle.entry("dir-1/file-1.txt")!!
+		val stream = entry.openInputStream()
+		assertThat(stream).isNotNull()
+	}
+
+
 }

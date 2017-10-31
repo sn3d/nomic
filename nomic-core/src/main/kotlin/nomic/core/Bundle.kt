@@ -19,9 +19,12 @@ import nomic.core.exception.BundleDoesNotExistException
 import nomic.core.exception.WtfException
 import nomic.core.script.BundleScript
 import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import java.nio.ByteBuffer
 import java.nio.file.*
+import java.util.zip.ZipEntry
+import java.util.zip.ZipInputStream
 
 
 /**
@@ -45,12 +48,14 @@ interface Bundle {
 		fun create(path: String): Bundle =
 			create(FileSystems.getDefault().getPath(path))
 
-
 		fun create(path: Path): Bundle {
-			if (!Files.isDirectory(path)) {
+			if (Files.isDirectory(path)) {
+				return FileSystemBundle(path)
+			} else if (Files.isRegularFile(path)) {
+				return ArchiveBundle(path)
+			} else {
 				throw BundleDoesNotExistException(path)
 			}
-			return FileSystemBundle(path)
 		}
 	}
 }
@@ -131,6 +136,7 @@ internal class FileSystemBundle(val root: Path) : Bundle {
 /**
  * This implementation operates with bundle inside another bundle (nested bundle). This is used
  * mainly in big bundles they're grouping multiple smaller bundles via 'module'.
+ *
  * @author vrabel.zdenko@gmail.com
  */
 class NestedBundle : Bundle {
@@ -183,9 +189,10 @@ class NestedBundle : Bundle {
  * 	)
  * ```
  */
-class InMemoryBundle private constructor(private val entries: List<InMemoryEntry>) : Bundle {
+open class InMemoryBundle private constructor(private val entries: List<InMemoryEntry>) : Bundle {
 
-	constructor(vararg entries: Pair<String, ByteBuffer>): this (entries.map { e -> InMemoryEntry(e.first, e.second) }.toList())
+	constructor(vararg entries: Pair<String, ByteBuffer>): this(entries.toMap())
+	constructor(entries: Map<String, ByteBuffer>) : this( entries.map { e -> InMemoryEntry(e.key, e.value) } )
 
 	override fun entry(path: String): Entry? =
 		entries.asSequence()
@@ -197,8 +204,104 @@ class InMemoryBundle private constructor(private val entries: List<InMemoryEntry
 			.toList()
 
 	class InMemoryEntry(override val name: String, private val data: ByteBuffer) : Entry {
-		override fun openInputStream(): InputStream =ByteArrayInputStream(data.array())
+		override fun openInputStream(): InputStream = ByteArrayInputStream(data.array())
+	}
+}
+
+
+/**
+ * This implementation load bundle as ZIP archive and access to entries inside ZIP folder. This implementation
+ * is used when you're trying open file instead of directory.
+ *
+ * @author vrabel.zdenko@gmail.com
+ */
+class ArchiveBundle : Bundle {
+
+	// hold the unzipped entries in memory
+	private val entries: List<ArchiveEntry>;
+
+
+	/**
+	 * unzip the file on [path] and hold the unzipped
+	 * bundle in memory
+	 */
+	constructor(path:  Path) : this(Files.newInputStream(path))
+
+
+	/**
+	 * read/unzip the input stream content and load it
+	 * into memory as [ArchiveEntry]
+	 */
+	constructor(input: InputStream) {
+		entries = unzipArchive(input)
 	}
 
 
+	override fun entry(path: String): Entry? =
+		entries.asSequence()
+			.find { e -> e.name == normalized(path) }
+
+
+	override fun entries(filter: (Entry) -> Boolean): List<Entry> =
+		entries.asSequence()
+			.filter(filter)
+			.toList()
+
+
+	/**
+	 * main unzipping function. It's only for internal usage
+	 */
+	private fun unzipArchive(input:InputStream): List<ArchiveEntry> {
+		val out = mutableListOf<ArchiveEntry>()
+		ZipInputStream(input).use { zipStream ->
+			var zipEntry = zipStream.nextEntry
+			while(zipEntry != null) {
+				// read data of entry
+				if (!zipEntry.isDirectory) {
+					val archiveEntry = ArchiveEntry(
+						name = zipEntry.name,
+						data = zipStream.readData()
+					)
+					out.add(archiveEntry)
+				}
+				zipEntry = zipStream.nextEntry
+			}
+		}
+		return out;
+	}
+
+
+	private fun ZipInputStream.readData():ByteBuffer {
+		ByteArrayOutputStream().use { outStream ->
+			val buffer = ByteArray(2048)
+			// loop for reading data
+			var len = this@readData.read(buffer)
+			while(len  > 0) {
+				outStream.write(buffer, 0, len)
+				len = this@readData.read(buffer)
+			}
+			return ByteBuffer.wrap(outStream.toByteArray())
+		}
+	}
+
+
+	/**
+	 * this method is normalizing paths (e.g. if start with '/' character, the character is removed)
+	 */
+	private fun normalized(path: String): String =
+		when {
+			path.startsWith("/") -> path.substring(1, path.length)
+			else -> path
+		}
+
+
+	/**
+	 * internal [Entry] implementation for [ArchiveBundle]
+	 */
+	private class ArchiveEntry(override val name: String, private val data: ByteBuffer) : Entry {
+		override fun openInputStream(): InputStream = ByteArrayInputStream(data.array())
+		override fun toString(): String {
+			return "ArchiveEntry(name='$name')"
+		}
+	}
 }
