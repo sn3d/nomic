@@ -17,4 +17,5 @@ Sitemap
 
   Getting Started <gettingstarted.rst>
   Installation <installation.rst>
+  Configuration <configuration.rst>
   Nomic DSL guide <nomic-dsl.rst>

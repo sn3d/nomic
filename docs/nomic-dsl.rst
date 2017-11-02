@@ -18,21 +18,25 @@ the box group and version.
   version = "1.0.0"
 
 Variables in descriptor
------------------------
+=======================
 
 In your descriptor scripts, you can also use some useful global variables:
 
-* **group** box group can be any string. You can also structure groups with `/` character.
+* **group** box group can be any string. You can also structure groups with ``/`` character.
 * **name** is box name that must be unique because it's used for identification
 * **version** box version
-* **user** username the nomic is using for installation/uploading files into HDFS configured in `nomic.conf`
+* **user** username the nomic is using for installation/uploading files into HDFS configured in ``nomic.conf``
 * **homeDir** each used in HDFS might have his own home directory. It's usefull when you want to sandboxing your applications/analyses.
-* **appDir** path to application directory in HDFS where are applications installed. The default value is ${homeDir}/app.
-* **defaultSchema** contain default HIVE schema that is configure via `nomic.conf`. Also good if you want to sandboxing your apps.
+* **appDir** path to application directory in HDFS where are applications installed. The default value is ``${homeDir}/app``
+* **defaultSchema** contain default HIVE schema that is configure via ``nomic.conf``. Also good if you want to sandboxing your apps.
+* **nameNode** the hostname of Name Node (it's value of ``fs.defaultFS`` parameter in your Hadoop configuration)
 
 
-Resource fact
--------------
+Facts
+=====
+
+Resource
+--------
 
 The ``resource`` fact is declaring which resource from your box will be uploaded
 to where in HDFS. Let's imagine we've got box archive like:
@@ -98,8 +102,8 @@ keep the file:
   }
 
 
-Dir fact
---------
+Dir
+---
 
 You can also declare presence of directory via ``dir`` fact. The declaration
 will create empty new directory if is not present yet.
@@ -122,8 +126,8 @@ keep it, you can use the ``keepIt`` parameter:
   }
 
 
-Table fact
-----------
+Table
+-----
 
 You can declare in descriptor also facts for HIVE. You can declare tables,
 schemes, you can also ensure the Hive scripts executions. Everything for
@@ -176,8 +180,8 @@ The ``create_authors_table.q`` then use these placeholders:
   STORED AS PARQUET
   LOCATION '${APP_DATA_DIR}/authors';
 
-Schema fact
------------
+Schema
+------
 
 This fact create Hive schema during installation and drop this schema during
 uninstall procedure. This fact is useful if you want to declare multiple
@@ -223,8 +227,8 @@ created as composition of user name, box name and some postfix. As you can
 see, each section might have own ``fields`` declaration.
 
 
-Coordinator fact
-----------------
+Coordinator
+-----------
 
 The Nomic application is also integrate Oozie. You can declare the Oozie ``coordinator``
 that is acting similar as ``resource`` but also submitting the coordinator with parameters.
