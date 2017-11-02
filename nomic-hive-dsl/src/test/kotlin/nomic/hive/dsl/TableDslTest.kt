@@ -1,5 +1,6 @@
 package nomic.hive.dsl
 
+import nomic.core.Exposable
 import nomic.core.findFactType
 import nomic.core.script.ClasspathScript
 import nomic.hive.TableFact
@@ -12,9 +13,17 @@ import org.junit.Test
  */
 class TableDslTest {
 
+	val hiveExposer: Exposable = object : Exposable {
+		override val exposedVariables: List<Pair<String, String>>
+			get() = listOf(
+				"hiveSchema" to "TEST"
+			)
+	}
+
+
 	@Test
 	fun testTable() {
-		val compiler = nomic.compiler.Compiler(defaultSchema = "TEST")
+		val compiler = nomic.compiler.Compiler(expos = listOf(hiveExposer))
 		val facts = compiler.compile(ClasspathScript("/test-table.box"))
 
 		Assertions.assertThat(facts)
@@ -29,7 +38,7 @@ class TableDslTest {
 
 	@Test
 	fun testTableWithDefaultSchema() {
-		val compiler = nomic.compiler.Compiler(defaultSchema = "TEST")
+		val compiler = nomic.compiler.Compiler(expos = listOf(hiveExposer))
 		val facts = compiler.compile(ClasspathScript("/test-table-default-schema.box"))
 
 		Assertions.assertThat(facts)
@@ -44,7 +53,7 @@ class TableDslTest {
 
 	@Test
 	fun testTableWithKeepIt() {
-		val compiler = nomic.compiler.Compiler(defaultSchema = "TEST")
+		val compiler = nomic.compiler.Compiler(expos = listOf(hiveExposer))
 		val facts = compiler.compile(ClasspathScript("/test-table-keepit.box"))
 
 		Assertions.assertThat(facts)
@@ -59,7 +68,7 @@ class TableDslTest {
 
 	@Test
 	fun testTableWithFields() {
-		val compiler = nomic.compiler.Compiler(defaultSchema = "TEST")
+		val compiler = nomic.compiler.Compiler(expos = listOf(hiveExposer))
 		val facts = compiler.compile(ClasspathScript("/test-table-fields.box"))
 
 		val fact = facts.findFactType(TableFact::class.java)

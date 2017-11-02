@@ -18,7 +18,7 @@ hive {
 
 // create nomic-test schema if not exist, the schema is not removed during uninstall
 hive("nomic_test") {
-    field 'DATABASE_SCHEMA': hiveSchema
+    field 'DATABASE_SCHEMA': delegate.hiveSchema
     field 'APP_ROOT_DIR'   : appDir
 
     table "authors" from "create_authors_table.q"

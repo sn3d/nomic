@@ -18,6 +18,14 @@ package nomic.core
 typealias FactMapping = List<Pair<Class<out Fact>, () -> FactHandler<out Fact>>>
 
 /**
+ * By implenting this interface in your [Plugin] you can expose various global
+ * variables into Compilation of [Script].
+ */
+interface Exposable {
+	val exposedVariables:List<Pair<String, String>>
+}
+
+/**
  * Plugin is special kind of [FactHandler] that is group of simple handlers
  * mapped to concrete [Fact] types. The apply and revert basically do only
  * routing to right [FactHandler].

@@ -24,7 +24,12 @@ import nomic.hive.adapter.JdbcHiveAdapter
 /**
  * Route HIVE related [Fact]s to concrete handlers.
  */
-class HivePlugin(private val hive: HiveAdapter) : Plugin() {
+class HivePlugin(private val hive: HiveAdapter, private val schema:String) : Plugin(), Exposable {
+
+	override val exposedVariables: List<Pair<String, String>>
+		get() = listOf(
+			"hiveSchema" to this.schema
+		)
 
 	companion object {
 
@@ -33,11 +38,12 @@ class HivePlugin(private val hive: HiveAdapter) : Plugin() {
 		 */
 		fun init(config: NomicConfig): HivePlugin =
 			HivePlugin(
-				JdbcHiveAdapter(
+				hive =JdbcHiveAdapter(
 					jdbcUrl  = config["hive.jdbc.url"] as String,
 					username = config["hive.user"] as String,
 					password = config["hive.password"] as String
-				)
+				),
+				schema = config["hive.schema"] as String
 			)
 	}
 

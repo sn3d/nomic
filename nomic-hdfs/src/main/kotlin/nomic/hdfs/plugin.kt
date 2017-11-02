@@ -33,7 +33,7 @@ import java.nio.file.FileSystems
  * @see ResourceFact
  * @see DirFact
  */
-class HdfsPlugin(val hdfs: HdfsAdapter) : Plugin() {
+class HdfsPlugin(val hdfs: HdfsAdapter) : Plugin(), Exposable {
 
 	companion object {
 
@@ -66,6 +66,12 @@ class HdfsPlugin(val hdfs: HdfsAdapter) : Plugin() {
 			)
 
 	}
+
+	override val exposedVariables: List<Pair<String, String>>
+		get() = listOf(
+			"nameNode" to hdfs.nameNode
+		)
+
 
 	/**
 	 * this implementation route the HDFS facts into handlers

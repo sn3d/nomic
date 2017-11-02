@@ -4,7 +4,7 @@ version = "1.0.0"
 
 hive {
     fields (
-        'DATABASE_SCHEMA': defaultSchema,
+        'DATABASE_SCHEMA': hiveSchema,
         'OMNI_ROOT_DIR': "${appDir}/.."
     )
 

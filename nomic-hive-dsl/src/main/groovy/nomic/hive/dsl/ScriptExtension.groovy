@@ -8,7 +8,7 @@ import nomic.dsl.NomicBaseScriptEx
 class ScriptExtension {
 
     static void hive(final NomicBaseScriptEx self, @DelegatesTo(HiveContext) Closure c) {
-        hive(self, self.defaultSchema, c)
+        hive(self, self.binding['hiveSchema'] as String, c)
     }
 
     static void hive(final NomicBaseScriptEx self, String hiveSchema, @DelegatesTo(HiveContext) Closure c) {

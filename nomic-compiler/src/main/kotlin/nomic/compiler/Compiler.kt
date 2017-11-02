@@ -44,7 +44,6 @@ import org.codehaus.groovy.control.customizers.ImportCustomizer
  * @property user is mapped into 'user' global variable in DSL script. Default value is system 'user.name'
  * @property homeDir is mapped into 'homeDir' global variable in DSL script. Default value is /user/${user}
  * @property appDir is mapped into 'appDir' global variable in DSL script. Default value is /user/${user}/app
- * @property defaultSchema is mapped into 'defaultSchema' global variable in DSL script. Default value is $user
  * @property nameNode is mapped into 'nameNode' global variable in DSL script. The default value is 'hdfs://localhost'
  *
  * @see compile
@@ -57,19 +56,17 @@ class Compiler {
 	val user: String
 	val homeDir: String
 	val appDir: String
-	val defaultSchema: String
-	val nameNode: String
+	val expos: List<Exposable>
 
 	/**
 	 * parametrized constructor you can use when you need to
 	 * change some global variable.
 	 */
-	constructor(user: String = "", homeDir: String = "", appDir: String = "", defaultSchema: String = "", nameNode: String = "") {
+	constructor(user: String = "", homeDir: String = "", appDir: String = "", expos: List<Exposable> = emptyList()) {
 		this.user = user
 		this.homeDir = homeDir
 		this.appDir = appDir
-		this.defaultSchema = defaultSchema
-		this.nameNode = nameNode
+		this.expos = expos
 	}
 
 
@@ -77,11 +74,10 @@ class Compiler {
 	 * construct the compiler with default values (used for testing)
 	 */
 	constructor() {
-		this.user          = System.getProperty("user.name");
-		this.homeDir       = "/users/${user}"
-		this.appDir        = "${homeDir}/app"
-		this.defaultSchema = user
-		this.nameNode      = "hdfs://localhost"
+		this.user     = System.getProperty("user.name");
+		this.homeDir  = "/users/${user}"
+		this.appDir   = "${homeDir}/app"
+		this.expos    = emptyList()
 	}
 
 
@@ -136,8 +132,12 @@ class Compiler {
 		this.setVariable("user", user)
 		this.setVariable("appDir", appDir)
 		this.setVariable("homeDir", homeDir)
-		this.setVariable("defaultSchema", defaultSchema)
-		this.setVariable("nameNode", nameNode)
+
+		//get trough all Exposed items
+		//and bind exposed variables
+		expos.flatMap(Exposable::exposedVariables).forEach { variable ->
+			this.setVariable(variable.first, variable.second)
+		}
 	}
 
 

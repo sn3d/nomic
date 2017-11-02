@@ -15,6 +15,7 @@
  */
 package nomic.hive.dsl
 
+import nomic.core.Exposable
 import nomic.core.script.ClasspathScript
 import nomic.hive.SchemaFact
 import org.assertj.core.api.Assertions
@@ -25,9 +26,19 @@ import org.junit.Test
  */
 class SchemaDslTest {
 
+	val hiveExposer: Exposable = object : Exposable {
+		override val exposedVariables: List<Pair<String, String>>
+			get() = listOf(
+				"hiveSchema" to "TEST"
+			)
+	}
+
+
 	@Test
 	fun testSchema() {
-		val compiler = nomic.compiler.Compiler(defaultSchema = "TEST")
+
+
+		val compiler = nomic.compiler.Compiler(expos = listOf(hiveExposer))
 		val facts = compiler.compile(ClasspathScript("/test-schema.box"))
 
 		Assertions.assertThat(facts)
@@ -40,7 +51,9 @@ class SchemaDslTest {
 
 	@Test
 	fun testSchemaKeepIt() {
-		val compiler = nomic.compiler.Compiler(defaultSchema = "TEST")
+
+
+		val compiler = nomic.compiler.Compiler(expos = listOf(hiveExposer))
 		val facts = compiler.compile(ClasspathScript("/test-schema-keepit.box"))
 
 		Assertions.assertThat(facts)

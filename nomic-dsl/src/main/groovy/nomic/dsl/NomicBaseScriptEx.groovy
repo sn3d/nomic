@@ -78,18 +78,9 @@ abstract class NomicBaseScriptEx extends Script {
         this.binding.variables['user'] = user
     }
 
-    def String getDefaultSchema() {
-        return this.binding.variables['defaultSchema'].toString()
-    }
-
-    void setDefaultSchema(String defaultSchema) {
-        this.binding.variables['defaultSchema'] = defaultSchema
-    }
-
     def String getNameNode() {
         return this.binding.variables['nameNode']
     }
-
 
     //-------------------------------------------------------------------------------------------------
     // global methods

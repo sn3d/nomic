@@ -59,7 +59,7 @@ class NomicApp : NomicInstance {
 			user          = config.user,
 			homeDir       = config.hdfsHomeDir,
 			appDir        = config.hdfsAppDir,
-			defaultSchema = config.defaultSchema,
+			//defaultSchema = config.defaultSchema,
 			nameNode      = hdfs.nameNode
 		)
 	}

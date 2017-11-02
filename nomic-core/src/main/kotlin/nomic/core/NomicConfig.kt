@@ -21,7 +21,4 @@ abstract class NomicConfig {
 	open val hdfsRepositoryDir: String
 		get() = this["nomic.hdfs.repository.dir"] ?: throw RequiredConfigPropertyException("nomic.hdfs.repository.dir")
 
-	open val defaultSchema: String
-		get() = this["hive.schema"] ?: throw RequiredConfigPropertyException("hive.schema")
-
 }
