@@ -87,9 +87,6 @@ class HdfsPlugin(val hdfs: HdfsAdapter) : Plugin(), Exposable {
 }
 
 
-
-
-
 /**
  * This implementation processing [ResourceFact]s and copy source from
  * [BundledBox] to HDFS destination. The rollback then remove the copied file
