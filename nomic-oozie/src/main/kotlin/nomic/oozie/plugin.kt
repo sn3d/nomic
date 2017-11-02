@@ -46,7 +46,7 @@ class OoziePlugin(
 
 	override fun configureMapping(): FactMapping =
 		listOf(
-			CoordinatorFact::class.java to { CoordinatorFactHandler(oozie, hdfs) }
+			CoordinatorFact::class.java to { CoordinatorFactHandler(oozie, hdfs, jobTracker) }
 		)
 }
 
@@ -54,7 +54,7 @@ class OoziePlugin(
 /**
  * This handler is processing [CoordinatorFact]
  */
-class CoordinatorFactHandler(private val oozie: OozieAdapter, private val hdfs: HdfsAdapter) : FactHandler<CoordinatorFact> {
+class CoordinatorFactHandler(private val oozie: OozieAdapter, private val hdfs: HdfsAdapter, private val jobTracker: String) : FactHandler<CoordinatorFact> {
 
 	/**
 	 * commiting the [CoordinatorFact]
@@ -62,7 +62,8 @@ class CoordinatorFactHandler(private val oozie: OozieAdapter, private val hdfs: 
 	override fun commit(box: BundledBox, fact: CoordinatorFact) {
 		val entry = box.entry(fact.xmlSource) ?: throw CoordinatorXmlNotFoundException(fact.xmlSource, box)
 		hdfs.copyToHdfs(entry, fact.hdfsDest)
-		oozie.createAndStartJob(fact.parameters)
+		val enrichedParams = fact.parameters + ("jobTracker" to jobTracker)
+		oozie.createAndStartJob(enrichedParams)
 	}
 
 	/**
