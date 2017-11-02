@@ -15,6 +15,7 @@
  */
 package nomic.dsl.oozie
 
+import nomic.core.Exposable
 import nomic.core.findFactType
 import nomic.core.findFactsType
 import nomic.core.script.ClasspathScript
@@ -27,10 +28,18 @@ import org.junit.Test
  */
 class CoordinatorTest {
 
+	val hdfsExposer: Exposable = object : Exposable {
+		override val exposedVariables: List<Pair<String, String>>
+			get() = listOf(
+				"nameNode" to "hdfs://localhost"
+			)
+
+	}
+
 	@Test
 	fun `compilation of script with simple coordinator should build a fact`() {
 		// compile
-		val compiler = nomic.compiler.Compiler(appDir = "/app", user = "nomicuser", nameNode = "hdfs://localhost")
+		val compiler = nomic.compiler.Compiler(appDir = "/app", user = "nomicuser", expos = listOf(hdfsExposer))
 		val facts = compiler.compile(ClasspathScript("/simple-coordinator.box"))
 		val coordinatorFact = facts.findFactType(CoordinatorFact::class.java)
 

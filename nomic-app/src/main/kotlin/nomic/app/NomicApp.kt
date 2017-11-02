@@ -56,11 +56,10 @@ class NomicApp : NomicInstance {
 
 		this.config = this.Config(config)
 		this.compiler = Compiler(
-			user          = config.user,
-			homeDir       = config.hdfsHomeDir,
-			appDir        = config.hdfsAppDir,
-			//defaultSchema = config.defaultSchema,
-			nameNode      = hdfs.nameNode
+			user      = config.user,
+			homeDir   = config.hdfsHomeDir,
+			appDir    = config.hdfsAppDir,
+			expos     = plugins.filterIsInstance(Exposable::class.java).toList()
 		)
 	}
 
