@@ -1,6 +1,5 @@
 import cucumber.api.CucumberOptions;
 import cucumber.api.junit.Cucumber;
-import net.serenitybdd.cucumber.CucumberWithSerenity;
 import org.junit.runner.RunWith;
 
 /**
@@ -9,7 +8,8 @@ import org.junit.runner.RunWith;
 @RunWith(Cucumber.class)
 @CucumberOptions(
 	features="src/integ-test/resources/features",
-	glue = "nomic.itest",
-	tags = {"@debug"})
+	glue = "nomic.itest"
+	//tags = {"@debug"}
+	)
 public class NomicITest {
 }

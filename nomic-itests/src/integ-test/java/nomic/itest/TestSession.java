@@ -13,20 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nomic.db
+package nomic.itest;
 
-import nomic.core.Box
-import nomic.core.BoxRef
+import nomic.app.NomicApp;
+import nomic.app.config.TypesafeConfig;
+import nomic.core.NomicConfig;
 
 /**
  * @author vrabel.zdenko@gmail.com
  */
-interface NomicDb {
+public class TestSession {
 
-	fun insertOrUpdate(box: Box): Box
-	fun dependantsOf(ref: BoxRef): List<BoxRef>
-	fun loadAll(): List<NotCompiledBox>
-	fun load(ref: BoxRef): NotCompiledBox?
-	fun delete(ref: BoxRef): Boolean
+	private static NomicConfig NOMIC_CONFIG;
+	private static NomicApp NOMIC_INSTANCE;
+
+	public static NomicApp nomic() {
+		if (NOMIC_INSTANCE == null) {
+			NOMIC_INSTANCE = NomicApp.createDefault(nomicConfig());
+		}
+		return NOMIC_INSTANCE;
+	}
+
+	public static NomicConfig nomicConfig() {
+		if (NOMIC_CONFIG == null) {
+			NOMIC_CONFIG = TypesafeConfig.Companion.loadDefaultConfiguration();
+		}
+		return NOMIC_CONFIG;
+	}
 
 }

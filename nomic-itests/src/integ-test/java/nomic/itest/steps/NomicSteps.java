@@ -18,6 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class NomicSteps {
 
+
 	@Step
 	public void installBox(String path) {
 		NomicInstance nomic = NomicApp.createDefault();

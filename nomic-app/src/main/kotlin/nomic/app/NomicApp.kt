@@ -15,6 +15,7 @@
  */
 package nomic.app
 
+import com.sun.org.apache.xml.internal.security.utils.XalanXPathAPI.isInstalled
 import nomic.app.config.TypesafeConfig
 import nomic.compiler.Compiler
 import nomic.core.*
@@ -22,6 +23,7 @@ import nomic.core.exception.BoxAlreadyInstalledException
 import nomic.core.exception.BoxNotInstalledException
 import nomic.core.exception.WtfException
 import nomic.core.fact.ModuleFact
+import nomic.core.fact.RequireFact
 import nomic.db.AvroDb
 import nomic.db.NomicDb
 import nomic.hdfs.HdfsPlugin
@@ -66,14 +68,17 @@ class NomicApp : NomicInstance {
 	companion object {
 
 		@JvmStatic
-		fun createDefault(): NomicApp {
+		fun createDefault(): NomicApp =
+			createDefault(TypesafeConfig.loadDefaultConfiguration())
+
+		@JvmStatic
+		fun createDefault(config:NomicConfig): NomicApp {
 			val config = TypesafeConfig.loadDefaultConfiguration()
 			val hdfsPlugin = HdfsPlugin.init(config)
 			val hivePlugin = HivePlugin.init(config)
 			val ooziePlugin = OoziePlugin.init(config, hdfsPlugin.hdfs)
 			return NomicApp(config, listOf(hdfsPlugin, hivePlugin, ooziePlugin))
 		}
-
 	}
 
 	//-------------------------------------------------------------------------------------------------
@@ -81,7 +86,6 @@ class NomicApp : NomicInstance {
 	//-------------------------------------------------------------------------------------------------
 
 	private inner class Config(private val parent: NomicConfig): NomicConfig() {
-
 		override fun get(name: String): String? {
 			if (name == "nomic.hdfs.home") {
 				return hdfs.homeDirectory
@@ -89,7 +93,6 @@ class NomicApp : NomicInstance {
 				return parent[name]
 			}
 		}
-
 	}
 
 	//-------------------------------------------------------------------------------------------------
@@ -98,11 +101,44 @@ class NomicApp : NomicInstance {
 
 
 	/**
-	 * open the bundle and compile it to [BundledBox] with facts
+	 * open the bundle and compile it's root 'nomic.box' into [BundledBox] with facts
 	 */
-	override fun compile(bundle: Bundle): BundledBox {
+	override fun compile(bundle: Bundle): BundledBox =
+		compileAll(bundle)
+			.filterIsInstance(RootBox::class.java)
+			.first()
+
+
+	/**
+	 * This function compile the bundle's box and all submodules.
+	 *
+	 * @see NomicInstance.compileAll
+	 */
+	override fun compileAll(bundle: Bundle): List<BundledBox> {
 		val facts = compiler.compile(bundle.script)
-		return BundledBox(bundle, facts)
+		val rootBox = RootBox(bundle, facts)
+		val dependenciesFacts = mutableListOf<RequireFact>()
+
+		return facts.findFactsType(ModuleFact::class.java)
+			.flatMap { moduleFact ->
+				// compile child module and child's submodules (recursion)
+				val childModuleBundle = NestedBundle(rootBox, moduleFact.name)
+				val childModuleBoxes = compileAll(childModuleBundle)
+
+				// find the root, create require fact
+				val r = childModuleBoxes.filterIsInstance(RootBox::class.java).first()
+				dependenciesFacts += RequireFact(box = r.ref())
+				childModuleBoxes
+			}
+			.map { box ->
+				// unwrap all roots (only one root might exist)
+				if (box is RootBox) {
+					box.unwrapRoot()
+				} else {
+					box
+				}
+			}
+			.toList() + RootBox(rootBox, facts + dependenciesFacts)
 	}
 
 
@@ -112,36 +148,40 @@ class NomicApp : NomicInstance {
 	 * @param force if it set to true, the bundle will be installed
 	 *        even if box is already present. It's good for
 	 *        fixing bad installations.
+	 *
+	 * @return references to all installed boxes from bundle in order how
+	 *         they was installed.
 	 */
-	override fun install(bundle: Bundle, force: Boolean): BoxRef =
-		install(compile(bundle), force)
+	override fun install(bundle: Bundle, force: Boolean): List<BoxRef> {
+		// compile bundle into boxes and do topology sort of them
+		val boxes = compileAll(bundle)
+		val sortedBoxes = boxes.topologySort()
+
+		// install the boxes in right order
+		val installedRefs =
+			sortedBoxes.map { box ->
+				install(box as BundledBox, force)
+			}
+
+		return installedRefs
+	}
 
 
 	/**
-	 * install the [BundledBox]
+	 * install once concrete [BundledBox]
 	 */
 	fun install(box: BundledBox, force: Boolean): BoxRef {
 		if (!canInstall(box, force)) {
 			throw BoxAlreadyInstalledException(box)
 		}
 
-		// install nested modules first
-		val installedNestedBoxes =
-			box.facts.asSequence()
-				.filterIsInstance(ModuleFact::class.java)
-				.map { m ->
-					// install nested module
-					val moduleBundle = NestedBundle(box, m.name)
-					install(moduleBundle, force)
-				}
-				.toList() // return nested modules for add. dependencies
-
 		// send all facts into plugins for commit
 		for(fact in box.facts) {
 			commitFact(box, fact)
 		}
 
-		db.insertOrUpdate(box, installedNestedBoxes)
+		//TODO: replace emptyList() by all require facts
+		db.insertOrUpdate(box)
 		return box.ref()
 	}
 
@@ -149,18 +189,18 @@ class NomicApp : NomicInstance {
 	/**
 	 * uninstall the box by reference
 	 */
-	override fun uninstall(ref: BoxRef, force: Boolean) =
-		uninstall(details(ref) ?: throw BoxNotInstalledException(ref), force)
+	override fun uninstall(ref: BoxRef, force: Boolean)  {
+		val installedBox = details(ref)
+		if (installedBox != null) {
+			uninstall(installedBox, force)
+		}
+	}
 
 
 	/**
 	 * uninstall the [InstalledBox]
 	 */
 	fun uninstall(box: InstalledBox, force: Boolean) {
-		if (!canUninstall(box, force)) {
-			throw BoxNotInstalledException(box.ref())
-		}
-
 		// first uninstall all dependencies
 		box.dependencies.forEach { dep ->
 			uninstall(dep, force)

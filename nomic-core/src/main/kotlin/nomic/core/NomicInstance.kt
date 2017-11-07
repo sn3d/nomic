@@ -1,6 +1,5 @@
 package nomic.core
 
-import nomic.core.*
 
 /**
  * @see NomicApp
@@ -19,13 +18,24 @@ interface NomicInstance {
 	fun compile(bundle: Bundle): BundledBox
 
 	/**
-	 * compile the bundle and install it if it's not installed yet.
+	 * Method compile bundle and all submodules in bundle and return
+	 * list of all compiled boxes. This is because one bundle might
+	 * contain multiple boxes.
+	 */
+	fun compileAll(bundle: Bundle): List<BundledBox>
+
+	/**
+	 * compile the bundle (with submodules) and install it if it's not installed yet.
+	 * The submodules are installed in right order (depends on [RequireFact] facts)
 	 *
 	 * @param force if it set to true, the bundle will be installed
 	 *        even if box is already present. It's good for
 	 *        fixing bad installations.
+	 *
+	 * @return references to all installed boxes from bundle in order how
+	 *         they was installed.
 	 */
-    fun install(bundle: Bundle, force: Boolean = false): BoxRef
+    fun install(bundle: Bundle, force: Boolean = false): List<BoxRef>
 
 	/**
 	 * compile the bundle and upgrade it, or install if it's not
@@ -51,5 +61,15 @@ interface NomicInstance {
 	 * returns null.
 	 */
 	fun details(info: BoxRef): InstalledBox?
+
+	//-------------------------------------------------------------------------------------------------
+	// default impl functions
+	//-------------------------------------------------------------------------------------------------
+
+	/**
+	 * default implementation for filesystem
+	 */
+	fun compile(path: String): BundledBox =
+		compile(Bundle.create(path))
 
 }

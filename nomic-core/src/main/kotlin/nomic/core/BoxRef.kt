@@ -40,5 +40,6 @@ data class BoxRef(
 	override fun toString(): String {
 		return "$group:$name:$version"
 	}
+
 }
 

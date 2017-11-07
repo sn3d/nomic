@@ -27,7 +27,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import java.nio.file.FileSystem
-import java.nio.file.FileSystems
 import java.nio.file.Files
 
 /**
@@ -198,7 +197,7 @@ class NomicFunctionalTest {
 		assertThat(app.details(BoxRef.parse("multimodule:submodule-c:1.0.0"))).isNotNull()
 
 		// now you can uninstall it
-		app.uninstall(ref)
+		app.uninstall(BoxRef.parse("multimodule:root:1.0.0"))
 
 		assertThat(app.details(BoxRef.parse("multimodule:module-a:1.0.0"))).isNull()
 		assertThat(app.details(BoxRef.parse("multimodule:module-b:1.0.0"))).isNull()

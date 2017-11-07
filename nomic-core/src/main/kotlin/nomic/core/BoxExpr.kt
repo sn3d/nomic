@@ -34,22 +34,35 @@ class BoxExpr(
 
 	companion object {
 		@JvmStatic
-		fun parse(expr: String) = expr.parseToBoxInfo()
+		fun parse(expr: String) = expr.parseToBoxExpr()
 	}
 
 }
 
 
 fun String.match(box: Box): Boolean = this.match(BoxRef.createReferenceTo(box))
-fun String.match(ref: BoxRef): Boolean = this.parseToBoxInfo().matchTo(ref)
+fun String.match(ref: BoxRef): Boolean = this.parseToBoxExpr().matchTo(ref)
+
 fun List<BoxRef>.findBox(expr: BoxExpr) = this.find { b -> expr.matchTo(b) }
 fun List<BoxRef>.findBox(expr: String) = this.find { b -> expr.match(b) }
+
+fun List<Box>.findBox(expr: BoxExpr): Box? =
+	this.first { box ->
+		expr.matchTo(box.ref())
+	}
+
+fun List<Box>.findBox(expr: String): Box? =
+	findBox(expr.parseToBoxExpr())
+
 
 //-------------------------------------------------------------------------------------------------
 // private methods
 //-------------------------------------------------------------------------------------------------
 
-private fun String.parseToBoxInfo(): BoxExpr {
+/**
+ * parse the string e.g. 'group:name:*' to [BoxExpr]
+ */
+private fun String.parseToBoxExpr(): BoxExpr {
 	if (!this.contains(":")) {
 		return BoxExpr(name = this, group = "*", version = "*")
 	} else {

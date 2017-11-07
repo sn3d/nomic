@@ -5,6 +5,7 @@ import nomic.core.NomicConfig;
 import nomic.app.config.TypesafeConfig;
 import nomic.hive.InvalidHiveQueryException;
 import nomic.hive.adapter.JdbcHiveAdapter;
+import nomic.itest.TestSession;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -30,7 +31,7 @@ public class HiveSteps {
 	@Step
 	public void checkIfSchemeExist(String scheme) {
 		// connect to Hive
-		NomicConfig config = TypesafeConfig.Companion.loadDefaultConfiguration();
+		NomicConfig config = TestSession.nomicConfig();
 		JdbcHiveAdapter hive = new JdbcHiveAdapter(config.get("hive.jdbc.url"), config.get("hive.user"), config.get("hive.password"));
 		hive.exec("SHOW TABLES IN NOMIC_TEST");
 	}
@@ -38,7 +39,7 @@ public class HiveSteps {
 	@Step
 	public void dropTableIfExist(String table) {
 		NomicConfig config = TypesafeConfig.Companion.loadDefaultConfiguration();
-		dropTableIfExist(config.getDefaultSchema(), table);
+		dropTableIfExist(config.get("hive.schema"), table);
 	}
 
 
@@ -57,7 +58,7 @@ public class HiveSteps {
 
 	private boolean tableExist(String table) {
 		NomicConfig config = TypesafeConfig.Companion.loadDefaultConfiguration();
-		return tableExist(config.getDefaultSchema(), table);
+		return tableExist(config.get("hive.schema"), table);
 	}
 
 

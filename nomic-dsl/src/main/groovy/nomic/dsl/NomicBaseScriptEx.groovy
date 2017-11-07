@@ -2,6 +2,7 @@ package nomic.dsl
 
 import nomic.core.FactBuilder
 import nomic.dsl.builder.ModuleFactBuilder
+import nomic.dsl.builder.RequireFactBuilder
 
 /**
  * This base script class basically contains everything what
@@ -89,4 +90,13 @@ abstract class NomicBaseScriptEx extends Script {
     void module(String name) {
         registerBuilder(new ModuleFactBuilder(name: name))
     }
+
+    void require(String ref) {
+        registerBuilder(new RequireFactBuilder(ref))
+    }
+
+    void require(Map args) {
+        registerBuilder(new RequireFactBuilder(args))
+    }
+
 }

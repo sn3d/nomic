@@ -39,11 +39,14 @@ class AvroDb(hdfs: HdfsAdapter, nomicHome: String) : NomicDb {
 		this.nomicHome = nomicHome;
 	}
 
-	override fun insertOrUpdate(box: Box, dependencies:List<BoxRef>): Box {
+	override fun insertOrUpdate(box: Box): Box {
 		// convert to DTO
 		val dto = box.toDto()
 
 		// add additional dependencies into DTO
+		val dependencies:List<BoxRef> =
+			box.facts.filterIsInstance(RequireFact::class.java).map { f -> f.box }
+
 		dependencies
 			.map(BoxRef::toDependencyDto)
 			.forEach { dep ->

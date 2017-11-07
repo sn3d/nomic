@@ -2,6 +2,8 @@ name = "module-a"
 group = "multimodule"
 version = "1.0.0"
 
+require group: "multimodule", name: "module-b", version: this.version
+
 hdfs {
     resource "file-a.txt"
 }

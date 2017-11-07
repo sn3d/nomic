@@ -6,6 +6,18 @@ contribute(globalContext) {
             'path': String
     ]
 
+    method name: 'require', params: [
+            'ref': String
+    ]
+
+    method name: 'require', params: [ args: [
+            parameter(name:'group',   type:String.name ),
+            parameter(name:'name',   type:String.name ),
+            parameter(name:'version', type:String.name )
+    ] ]
+
+
+
     property name: "name", type: 'String'
     property name: "version", type: 'String'
     property name: "group", type: 'String'

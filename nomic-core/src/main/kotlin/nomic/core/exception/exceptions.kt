@@ -23,4 +23,5 @@ class RequiredConfigPropertyException(name: String) : RuntimeException("The '${n
 class WtfException : RuntimeException {
 	constructor() : super("What a failure!")
 	constructor(e:Throwable): super("What a failure!", e)
+	constructor(msg: String): super("What a failure! ${msg}")
 }

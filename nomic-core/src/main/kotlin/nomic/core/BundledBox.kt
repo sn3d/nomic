@@ -25,13 +25,13 @@ import java.nio.ByteBuffer
  * This is [Box] that is loaded from [Bundle] and can be installed to your system.
  * @author vrabel.zdenko@gmail.com
  */
-class BundledBox : Box, Bundle {
+open class BundledBox : Box, Bundle {
 	
 	//-------------------------------------------------------------------------------------------------
 	// public API
 	//-------------------------------------------------------------------------------------------------
 
-	private val bundle: Bundle
+	protected val bundle: Bundle
 
 	override val script: Script
 		get() = BundleScript(bundle)
@@ -75,8 +75,10 @@ class BundledBox : Box, Bundle {
 	override fun entries(filter: (Entry) -> Boolean): List<Entry> = bundle.entries(filter)
 
 	override fun toString(): String {
-		return "BundledBox(facts=$facts)"
+		return "BundledBox(${ref()})"
 	}
+}
 
-
+class RootBox(bundle: Bundle, facts: List<Fact>) : BundledBox(bundle, facts) {
+	fun unwrapRoot() = BundledBox(this.bundle, this.facts)
 }
