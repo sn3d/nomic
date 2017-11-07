@@ -31,6 +31,94 @@ In your descriptor scripts, you can also use some useful global variables:
 * **defaultSchema** contain default HIVE schema that is configure via ``nomic.conf``. Also good if you want to sandboxing your apps.
 * **nameNode** the hostname of Name Node (it's value of ``fs.defaultFS`` parameter in your Hadoop configuration)
 
+Modules & dependencies
+======================
+
+You can create an application box with multiple modules. This is useful especially for larger applications when you need to
+organize your content. There is also second use case of modules. Because facts inside the Box don't know nothing about
+dependencies, you can solve your dependency problem via modules as well.
+
+Let's consider we've got our application 'best-analytics' with some resources and with ``./nomic.box``:
+
+.. code-block:: groovy
+
+  group = "mycompany"
+  name = "best-analytics"
+  version = "1.0.0"
+
+  hdfs {
+    ...
+  }
+
+The box is build via command:
+
+.. code-block:: shell
+
+  $ jar cf best-analytics.nomic ./*
+
+Let's imagine we would like to split the content into two modules ``kpi`` and ``rfm``.
+We will create a 2 new folders with own ``nomic.box`` they will represents our
+new modules.
+
+The ``./kpi/nomic.box``:
+
+.. code-block:: groovy
+
+  group = "mycompany"
+  name = "kpi"
+  version = "1.0.0"
+
+  ...
+
+and the ``./rfm/nomic.box``:
+
+.. code-block:: groovy
+
+  group = "mycompany"
+  name = "rfm"
+  version = "1.0.0"
+
+  ...
+
+The final step is to declare these 2 new folders as modules in main ``./nomic.box``:
+
+.. code-block:: groovy
+
+  group = "mycompany"
+  name = "best-analytics"
+  version = "1.0.0"
+
+  module 'kpi'
+  module 'rfm'
+
+The ``module`` fact ensure the main application box will have 2 new dependencies
+they will be installed before any resource in main box. That means the installation
+install each module first and then the ``best-analytics``. When we install this
+bundle, we should see 3 new modules:
+
+.. code-block:: shell
+
+  $ ./bin/nomic install best-analytics.nomic
+  $ ./bin/nomic list
+  mycompany:best-analytics:1.0.0
+  mycompany:kpi:1.0.0
+  mycompany:rfm:1.0.0
+
+Also removing of ``best-analytics`` will remove all modules in right order.
+
+Sometimes we also need to tell that our ``rfm`` module depends on ``kpi``.
+That can be achieved via ``require`` fact. Let's modify our ``./rfm/nomic.box``:
+
+.. code-block:: groovy
+
+  group = "mycompany"
+  name = "rfm"
+  version = "1.0.0"
+
+  require name: "kpi", group: this.group, version: $this.version
+
+Now the ``rfm`` module need ``kpi`` first what means the ``kpi`` module will be
+installed first.
 
 Facts
 =====

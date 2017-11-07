@@ -86,7 +86,7 @@ executing command:
 
 .. code-block:: shell
 
-  >./bin/nomic install simple-workflow.nomic
+  $ ./bin/nomic install simple-workflow.nomic
 
 In your HDFS, you should have ``workflow.xml`` available in application folder ``${USER_HOME}/app/examples/simple-workflow``.
 Also after executing ``./bin/nomic list`` command, you will see the box was
