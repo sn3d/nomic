@@ -1,0 +1,30 @@
+def globalContext = context(filetypes: ['box'])
+
+contribute(globalContext) {
+
+    method name: 'module', params: [
+            'path': String
+    ]
+
+    method name: 'require', params: [
+            'ref': String
+    ]
+
+    method name: 'require', params: [ args: [
+            parameter(name:'group',   type:String.name ),
+            parameter(name:'name',   type:String.name ),
+            parameter(name:'version', type:String.name )
+    ] ]
+
+
+
+    property name: "name", type: 'String'
+    property name: "version", type: 'String'
+    property name: "group", type: 'String'
+
+    property name: "user", type: 'String'
+    property name: "homeDir", type: 'String'
+    property name: "appDir", type: 'String'
+    property name: "defaultSchema", type: 'String'
+    property name: "nameNode", type: 'String'
+}

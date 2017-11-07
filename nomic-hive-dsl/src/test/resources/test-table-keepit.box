@@ -1,0 +1,5 @@
+name = "test-table"
+
+hive {
+    table "MY_TABLE" from "table_script.q" keepIt true
+}

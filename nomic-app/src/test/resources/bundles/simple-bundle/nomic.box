@@ -1,0 +1,8 @@
+name = "simple"
+group = "examples"
+version = "1.0.0"
+
+hdfs {
+    resource "file.txt"
+    resource "file-update.txt"
+}

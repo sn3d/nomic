@@ -1,0 +1,7 @@
+name = "test"
+group = "nomic"
+version = "1.0"
+
+hdfs {
+    resource "somefile.txt" to "dir/file.txt"
+}

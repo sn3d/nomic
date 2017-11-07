@@ -4,7 +4,7 @@ import cucumber.api.java.en.And;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import net.thucydides.core.annotations.Steps;
-import nomic.NomicConfig;
+import nomic.core.NomicConfig;
 import nomic.itest.steps.HdfsSteps;
 import nomic.itest.steps.NomicSteps;
 

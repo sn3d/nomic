@@ -1,0 +1,35 @@
+{
+  "total": 1,
+  "coordinatorjobs": [
+    {
+      "total": 0,
+      "pauseTime": null,
+      "coordJobName": "daily",
+      "coordJobPath": "hdfs://oozie-server:8020/app/coordinator.xml",
+      "timeZone": "CET",
+      "frequency": "1",
+      "conf": null,
+      "endTime": "Thu, 01 Jan 2026 00:00:00 GMT",
+      "executionPolicy": "FIFO",
+      "startTime": "Tue, 23 Oct 2017 14:20:00 GMT",
+      "timeUnit": "DAY",
+      "concurrency": 1,
+      "coordJobId": "0000214-171019175534879-oozie-oozi-C",
+      "lastAction": "Wed, 25 Oct 2017 22:00:00 GMT",
+      "status": "RUNNING",
+      "acl": null,
+      "mat_throttling": 0,
+      "timeOut": 0,
+      "nextMaterializedTime": "Wed, 25 Oct 2017 22:00:00 GMT",
+      "bundleId": null,
+      "toString": "Coordinator application id[0000214-171019175534879-oozie-oozi-C] status[RUNNING]",
+      "coordExternalId": null,
+      "group": null,
+      "user": "analytics",
+      "consoleUrl": null,
+      "actions": []
+    }
+  ],
+  "len": 50,
+  "offset": 1
+}

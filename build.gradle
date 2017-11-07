@@ -5,6 +5,9 @@ buildscript {
 	repositories {
 		mavenCentral()
 		jcenter()
+		maven {
+			url "https://plugins.gradle.org/m2/"
+		}
 	}
 	dependencies {
 		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
@@ -12,6 +15,8 @@ buildscript {
 		classpath 'com.netflix.nebula:gradle-ospackage-plugin:4.4.2'
 		classpath "org.jetbrains.dokka:dokka-gradle-plugin:${dokka_version}"
 		classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
+		classpath "com.commercehub.gradle.plugin:gradle-avro-plugin:0.9.0"
+		classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0'
 	}
 }
 
@@ -22,7 +27,7 @@ allprojects { project ->
 		mavenCentral()
 		jcenter()
 	}
-
+	apply plugin: 'project-report'
 }
 
 subprojects { subproject ->
@@ -54,6 +59,8 @@ project('nomic-core') {
 	dependencies {
 		compile group: "com.github.spullara.mustache.java", name: "compiler", version: "0.9.5"
 		compile 'commons-io:commons-io:2.4'
+		compile 'org.codehaus.groovy:groovy:2.4.12'
+		testCompile 'com.google.jimfs:jimfs:1.1'
 	}
 
 	apply plugin: 'org.jetbrains.dokka'
@@ -64,7 +71,7 @@ project('nomic-core') {
 	}
 }
 
-project('nomic-dsl-groovy') {
+project('nomic-dsl') {
 	apply plugin: 'groovy'
 
 	dependencies {
@@ -73,11 +80,20 @@ project('nomic-dsl-groovy') {
 	}
 }
 
+project('nomic-compiler') {
+	dependencies {
+		compile project(':nomic-core')
+		compile project(':nomic-dsl')
+	}
+}
+
+
 project('nomic-hdfs') {
 	dependencies {
 		compile project(':nomic-core')
 		compile (group: 'org.apache.hadoop', name: 'hadoop-hdfs', version: '2.7.3')
 		compile (group: 'org.apache.hadoop', name: 'hadoop-common', version: '2.7.3')
+		testCompile 'com.google.jimfs:jimfs:1.1'
 	}
 }
 
@@ -85,9 +101,10 @@ project('nomic-hdfs-dsl') {
 	apply plugin: 'groovy'
 
 	dependencies {
-		compile project(':nomic-dsl-groovy')
+		compile project(':nomic-dsl')
 		compile project(':nomic-hdfs')
 		compile 'org.codehaus.groovy:groovy:2.4.12'
+		testCompile project(':nomic-compiler')
 	}
 }
 
@@ -105,21 +122,69 @@ project('nomic-hive-dsl') {
 	apply plugin: 'groovy'
 
 	dependencies {
-		compile project(':nomic-dsl-groovy')
+		compile project(':nomic-dsl')
 		compile project(':nomic-hive')
 		compile 'org.codehaus.groovy:groovy:2.4.12'
+		testCompile project(':nomic-compiler')
+	}
+}
+
+project('nomic-oozie') {
+	dependencies {
+		compile project(':nomic-core')
+		compile project(':nomic-hdfs')
+		compile group: "com.mashape.unirest", name: "unirest-java", version: "1.4.9"
+		testCompile 'com.github.tomakehurst:wiremock:2.10.1'
+	}
+
+	configurations {
+		all*.exclude group: 'javax.servlet', module: 'servlet-api'
+	}
+}
+
+project('nomic-oozie-dsl') {
+	apply plugin: 'groovy'
+	dependencies {
+		compile project(':nomic-dsl')
+		compile project(':nomic-oozie')
+		compile 'org.codehaus.groovy:groovy:2.4.12'
+		testCompile project(':nomic-compiler')
+	}
+}
+
+
+project('nomic-db-avro') {
+	dependencies {
+		compile 'org.apache.avro:avro:1.8.2'
+	}
+
+	apply plugin: "com.commercehub.gradle.plugin.avro"
+}
+
+project('nomic-db') {
+	dependencies {
+		compile project(':nomic-core')
+		compile project(':nomic-hdfs')
+		compile project(':nomic-db-avro')
+		compile project(':nomic-compiler')
+		testCompile 'com.google.jimfs:jimfs:1.1'
 	}
 }
 
 project('nomic-app') {
 	dependencies {
 		compile project(':nomic-core')
-		compile project(':nomic-dsl-groovy')
+		compile project(':nomic-compiler')
+		compile project(':nomic-dsl')
 		compile project(':nomic-hdfs')
 		compile project(':nomic-hdfs-dsl')
 		compile project(':nomic-hive')
 		compile project(':nomic-hive-dsl')
+		compile project(':nomic-oozie')
+		compile project(':nomic-oozie-dsl')
+		compile project(':nomic-db')
 		compile group: "com.typesafe", name: "config", version: "1.3.1"
+		testCompile 'com.google.jimfs:jimfs:1.1'
 	}
 }
 

@@ -1,5 +1,6 @@
 Feature: HDFS Resource
 
+  @debug
   Scenario: Install box with HDFS resources
     Given the "nomic-examples:hello-world" box is not installed yet
     When install the box from "../nomic-examples/hello-world"
@@ -7,7 +8,7 @@ Feature: HDFS Resource
 
   Scenario: Uninstall box with HDFS resources
     Given the box "../nomic-examples/hello-world" is installed
-    When Uninstall the "nomic-examples:hello-world" box
+    When Uninstall the "nomic-examples:hello-world:1.0.0" box
     Then the file "hello-world.txt" is removed from nomicHdfsAppDir/nomic-examples/hello-world folder in HDFS
 
   Scenario: Install resource to specific folder in root

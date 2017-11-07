@@ -1,3 +1,3 @@
 moduleName = nomic-hdfs-dsl
 moduleVersion = 1.0
-extensionClasses = nomic.hdfs.dsl.HdfsBaseScriptExt
+extensionClasses = nomic.hdfs.dsl.ScriptExtension

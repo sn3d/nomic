@@ -1,0 +1,23 @@
+{
+  "namespace": "nomic.db.avro",
+  "name" : "InstalledBoxDto",
+  "type" : "record",
+  "fields" : [
+    { "name" : "name",         "type" : "string"},
+    { "name" : "group",        "type" : "string"},
+    { "name" : "version",      "type" : "string"},
+    { "name" : "script",       "type" : "string"},
+    { "name" : "dependencies", "type" : {
+        "type": "array", "items": {
+          "name": "DependencyDto",
+          "type": "record",
+          "fields": [
+            { "name" : "name",         "type" : "string"},
+            { "name" : "group",        "type" : "string"},
+            { "name" : "version",      "type" : "string"}
+          ]
+        }
+      }
+    }
+  ]
+}

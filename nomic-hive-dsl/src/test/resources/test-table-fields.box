@@ -1,0 +1,7 @@
+name = "test-table-fields"
+
+hive("CUSTOM") {
+    field 'FIELD_A': 'A'
+    field 'FIELD_B': 'B'
+    table "MY_TABLE" from "script.q" fields 'FIELD_B': 'B OVERRIDE', 'DEF_SCHEMA': delegate.hiveSchema
+}

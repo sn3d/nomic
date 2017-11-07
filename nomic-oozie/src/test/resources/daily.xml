@@ -1,0 +1,10 @@
+<coordinator-app name="daily"
+                 frequency="${coord:endOfDays(1)}"
+                 start="${START}"
+                 end="2020-01-01T00:00Z"
+                 timezone="CET"
+                 xmlns="uri:oozie:coordinator:0.2"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="uri:oozie:coordinator:0.2
+                https://raw.githubusercontent.com/apache/oozie/master/client/src/main/resources/oozie-coordinator-0.2.xsd">
+</coordinator-app>
