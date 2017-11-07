@@ -13,14 +13,14 @@ interface NomicInstance {
 	val config: NomicConfig
 
 	/**
-	 * Method compile bundle into [BundledBox]
+	 * Method compile bundle into one [ApplicationBox]
 	 */
-	fun compile(bundle: Bundle): BundledBox
+	fun compile(bundle: Bundle): ApplicationBox
 
 	/**
-	 * Method compile bundle and all submodules in bundle and return
-	 * list of all compiled boxes. This is because one bundle might
-	 * contain multiple boxes.
+	 * Method compile the whole bundle and returns
+	 * list of all compiled boxes (one [ApplicationBox] and multiple [ModuleBox]es. This is
+	 * because one bundle might contain multiple boxes.
 	 */
 	fun compileAll(bundle: Bundle): List<BundledBox>
 

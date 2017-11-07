@@ -79,20 +79,20 @@ class NomicSubmodulesTest {
 
 
 	@Test
-	fun `multimodule bundle should have root box with submodule boxes`() {
+	fun `multimodule bundle should have only one application box with module boxes`() {
 		val bundle = "./build/bundles/multimodule-bundle".asBundleFrom(fs)
 		val boxes = app.compileAll(bundle)
 
 		assertThat(boxes).hasSize(4)
-		assertThat(boxes.filterIsInstance(RootBox::class.java)).hasSize(1)
+		assertThat(boxes.filterIsInstance(ApplicationBox::class.java)).hasSize(1)
 	}
 
 
 	@Test
-	fun `multimodule bundle should have root with require facts to submodules`() {
+	fun `multimodule bundle should have application box with require facts to nested modules`() {
 		val bundle = "./build/bundles/multimodule-bundle".asBundleFrom(fs)
 		val boxes = app.compileAll(bundle)
-		val root = boxes.filterIsInstance(RootBox::class.java).first()
+		val root = boxes.filterIsInstance(ApplicationBox::class.java).first()
 
 		assertThat(root.facts)
 			.contains(RequireFact(box = BoxRef.parse("multimodule:module-a:1.0.0")))

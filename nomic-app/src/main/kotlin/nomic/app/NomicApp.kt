@@ -20,7 +20,6 @@ import nomic.app.config.TypesafeConfig
 import nomic.compiler.Compiler
 import nomic.core.*
 import nomic.core.exception.BoxAlreadyInstalledException
-import nomic.core.exception.BoxNotInstalledException
 import nomic.core.exception.WtfException
 import nomic.core.fact.ModuleFact
 import nomic.core.fact.RequireFact
@@ -103,9 +102,9 @@ class NomicApp : NomicInstance {
 	/**
 	 * open the bundle and compile it's root 'nomic.box' into [BundledBox] with facts
 	 */
-	override fun compile(bundle: Bundle): BundledBox =
+	override fun compile(bundle: Bundle): ApplicationBox =
 		compileAll(bundle)
-			.filterIsInstance(RootBox::class.java)
+			.filterIsInstance(ApplicationBox::class.java)
 			.first()
 
 
@@ -116,29 +115,29 @@ class NomicApp : NomicInstance {
 	 */
 	override fun compileAll(bundle: Bundle): List<BundledBox> {
 		val facts = compiler.compile(bundle.script)
-		val rootBox = RootBox(bundle, facts)
+		val appBox = ApplicationBox(bundle, facts)
 		val dependenciesFacts = mutableListOf<RequireFact>()
 
 		return facts.findFactsType(ModuleFact::class.java)
 			.flatMap { moduleFact ->
 				// compile child module and child's submodules (recursion)
-				val childModuleBundle = NestedBundle(rootBox, moduleFact.name)
+				val childModuleBundle = NestedBundle(appBox, moduleFact.name)
 				val childModuleBoxes = compileAll(childModuleBundle)
 
 				// find the root, create require fact
-				val r = childModuleBoxes.filterIsInstance(RootBox::class.java).first()
+				val r = childModuleBoxes.filterIsInstance(ApplicationBox::class.java).first()
 				dependenciesFacts += RequireFact(box = r.ref())
 				childModuleBoxes
 			}
 			.map { box ->
-				// unwrap all roots (only one root might exist)
-				if (box is RootBox) {
-					box.unwrapRoot()
+				// make all nested boxes as MOduleBox-es (only one root might exist)
+				if (box is ApplicationBox) {
+					box.toModuleBox()
 				} else {
 					box
 				}
 			}
-			.toList() + RootBox(rootBox, facts + dependenciesFacts)
+			.toList() + ApplicationBox(appBox, facts + dependenciesFacts)
 	}
 
 

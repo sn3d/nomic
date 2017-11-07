@@ -79,6 +79,8 @@ open class BundledBox : Box, Bundle {
 	}
 }
 
-class RootBox(bundle: Bundle, facts: List<Fact>) : BundledBox(bundle, facts) {
-	fun unwrapRoot() = BundledBox(this.bundle, this.facts)
+class ApplicationBox(bundle: Bundle, facts: List<Fact>) : BundledBox(bundle, facts) {
+	fun toModuleBox() = ModuleBox(this.bundle, this.facts)
 }
+
+class ModuleBox(bundle: Bundle, facts: List<Fact>) : BundledBox(bundle, facts)
