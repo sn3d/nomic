@@ -16,7 +16,6 @@
 package nomic.app.cli
 
 import nomic.app.NomicApp
-import nomic.app.config.TypesafeConfig
 import nomic.core.BoxRef
 import nomic.core.match
 
@@ -43,7 +42,7 @@ object ListCliCommand {
 	}
 
 	private fun printToConsole(ref: BoxRef) {
-		println("${ref.group} \t\t ${ref.name} \t\t ${ref.version}")
+		println("${ref.group}:${ref.name}:${ref.version}")
 	}
 
 }

@@ -30,7 +30,6 @@ object ConfigCliCommand {
 		println("nomic.hdfs.home:           " + app.config["nomic.hdfs.home"])
 		println("nomic.hdfs.app.dir:        " + app.config["nomic.hdfs.app.dir"])
 		println("nomic.hdfs.repository.dir: " + app.config["nomic.hdfs.repository.dir"])
-		println("nomic.default.schema:      " + app.config["nomic.default.schema"])
 		println("")
 		println("hdfs.adapter:           " + app.config["hdfs.adapter"])
 		println("hdfs.simulator.basedir: " + app.config["hdfs.simulator.basedir"])
@@ -40,6 +39,7 @@ object ConfigCliCommand {
 		println("hive.jdbc.url:  " + app.config["hive.jdbc.url"])
 		println("hive.user:      " + app.config["hive.user"])
 		println("hive.password:  " + app.config["hive.password"])
+		println("hive.schema:    " + app.config["hive.schema"])
 	}
 
 }

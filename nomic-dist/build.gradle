@@ -5,7 +5,7 @@ apply plugin: 'com.jfrog.bintray'
 
 jar {
     manifest {
-        attributes 'Main-Class': 'nomic.NomicRunner'
+        attributes 'Main-Class': 'nomic.app.NomicRunner'
     }
 }
 
