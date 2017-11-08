@@ -21,9 +21,9 @@ directory:
 
 .. code-block:: shell
 
-  $ wget https://dl.bintray.com/sn3d/nomic-repo/nomic-0.1.25-bin.tar
-  $ tar -xzf ./nomic-0.1.25-bin.tar
-  $ cd ./nomic-0.1.25
+  $ wget https://dl.bintray.com/sn3d/nomic-repo/nomic-{version}-bin.tar
+  $ tar -xzf ./nomic-{version}-bin.tar
+  $ cd ./nomic-{version}
 
 Configuration
 -------------

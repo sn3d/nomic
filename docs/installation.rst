@@ -22,9 +22,9 @@ archive. All you need is just download it, unpack it and run.
 
 .. code-block:: shell
 
-  $ wget https://dl.bintray.com/sn3d/nomic-repo/nomic-0.1.25-bin.tar
-  $ tar -xzf ./nomic-0.1.25-bin.tar
-  $ cd ./nomic-0.1.25
+  $ wget https://dl.bintray.com/sn3d/nomic-repo/nomic-{version}-bin.tar
+  $ tar -xzf ./nomic-{version}-bin.tar
+  $ cd ./nomic-{version}
   $ ./bin/nomic
 
 All configuration files, libraries and shell scripts are placed in one folder.
@@ -38,7 +38,7 @@ as RPM directly:
 
 .. code-block:: shell
 
-  $ sudo rpm -i https://dl.bintray.com/sn3d/nomic-repo/nomic-0.1.25-1.noarch.rpm
+  $ sudo rpm -i https://dl.bintray.com/sn3d/nomic-repo/nomic-{version}.noarch.rpm
   $ nomic
 
 
