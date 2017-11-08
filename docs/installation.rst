@@ -38,7 +38,7 @@ as RPM directly:
 
 .. code-block:: shell
 
-  $ sudo rpm -i https://dl.bintray.com/sn3d/nomic-repo/nomic-0.1.25-1.noarch.rpm
+  $ sudo rpm -i https://dl.bintray.com/sn3d/nomic-repo/nomic-{version}.noarch.rpm
   $ nomic
 
 
