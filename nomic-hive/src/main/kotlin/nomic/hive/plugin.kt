@@ -99,7 +99,7 @@ private class TableHandler(private val plugin: HivePlugin, private val hive: Hiv
 private class SchemaHandler(private val hive: HiveAdapter) : FactHandler<SchemaFact> {
 
 	override fun commit(box: BundledBox, fact: SchemaFact) {
-		hive.exec("CREATE SCHEMA IF NOT EXIST ${fact.schema}")
+		hive.exec("CREATE SCHEMA ${fact.schema} IF NOT EXIST ")
 	}
 
 	override fun rollback(box: InstalledBox, fact: SchemaFact) {
