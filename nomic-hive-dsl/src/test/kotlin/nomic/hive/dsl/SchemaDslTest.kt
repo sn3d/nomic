@@ -54,9 +54,13 @@ class SchemaDslTest {
 
 		Assertions.assertThat(facts)
 			.contains(SchemaFact(
-				schema = "TEST",
+				schema = "TEST_1",
 				keepIt = true
-			));
+			))
+			.contains(SchemaFact(
+				schema = "TEST_2",
+				keepIt = true
+			))
 	}
 
 	@Test
