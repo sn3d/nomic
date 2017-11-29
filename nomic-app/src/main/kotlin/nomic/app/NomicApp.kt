@@ -74,7 +74,7 @@ class NomicApp : NomicInstance {
 		fun createDefault(config:NomicConfig): NomicApp {
 			val config = TypesafeConfig.loadDefaultConfiguration()
 			val hdfsPlugin = HdfsPlugin.init(config)
-			val hivePlugin = HivePlugin.init(config)
+			val hivePlugin = HivePlugin(config)
 			val ooziePlugin = OoziePlugin.init(config, hdfsPlugin.hdfs)
 			return NomicApp(config, listOf(hdfsPlugin, hivePlugin, ooziePlugin))
 		}

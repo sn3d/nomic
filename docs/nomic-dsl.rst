@@ -28,8 +28,14 @@ In your descriptor scripts, you can also use some useful global variables:
 * **user** username the nomic is using for installation/uploading files into HDFS configured in ``nomic.conf``
 * **homeDir** each used in HDFS might have his own home directory. It's usefull when you want to sandboxing your applications/analyses.
 * **appDir** path to application directory in HDFS where are applications installed. The default value is ``${homeDir}/app``
-* **hiveSchema** contain default HIVE schema that is configure via ``nomic.conf``. Also good if you want to sandboxing your apps.
 * **nameNode** the hostname of Name Node (it's value of ``fs.defaultFS`` parameter in your Hadoop configuration)
+
+Also each module (Hive, Hdfs etc) can expose own parameters.
+
+* **hiveSchema** contain default HIVE schema that is configure via ``nomic.conf``. Also good if you want to sandboxing your apps.
+* **hiveJdbcUrl** value of ``hive.jdbc.url`` in ``nomic.conf`` that is used by Hive facts.
+* **hiveUser** value of ``hive.user`` in ``nomic.conf`` that is used by Hive facts.
+
 
 Modules & dependencies
 ======================

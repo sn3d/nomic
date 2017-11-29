@@ -20,38 +20,49 @@ import nomic.core.*
 import nomic.hive.adapter.HiveAdapter
 import nomic.hive.adapter.JdbcHiveAdapter
 
+data class HiveConfig(val jdbcUrl: String, val user: String, val password: String, val schema: String)
+
+/**
+ * Convert [NomicConfig] to plugin's [HiveConfig]
+ */
+fun NomicConfig.toHiveConfig(): HiveConfig =
+	HiveConfig(
+		jdbcUrl = this["hive.jdbc.url"] as String,
+		user = this["hive.user"] as String,
+		password = this["hive.password"] as String,
+		schema = this["hive.schema"] as String
+	)
 
 /**
  * Route HIVE related [Fact]s to concrete handlers.
  */
-class HivePlugin(private val hive: HiveAdapter, private val schema:String) : Plugin(), Exposable {
+class HivePlugin(private val config: HiveConfig) : Plugin(), Exposable {
+
+	private val hive: HiveAdapter
+
+	init {
+		this.hive = JdbcHiveAdapter(
+			jdbcUrl = config.jdbcUrl,
+			username = config.user,
+			password = config.password
+		)
+	}
+
+	constructor(nomicConfig: NomicConfig) : this(nomicConfig.toHiveConfig())
 
 	override val exposedVariables: List<Pair<String, String>>
 		get() = listOf(
-			"hiveSchema" to this.schema
+			"hiveSchema" to this.config.schema,
+			"hiveJdbcUrl" to this.config.jdbcUrl,
+			"hiveUser" to this.config.user
 		)
-
-	companion object {
-
-		/**
-		 * create [HivePlugin] based on configuration in [NomicConfig].
-		 */
-		fun init(config: NomicConfig): HivePlugin =
-			HivePlugin(
-				hive =JdbcHiveAdapter(
-					jdbcUrl  = config["hive.jdbc.url"] as String,
-					username = config["hive.user"] as String,
-					password = config["hive.password"] as String
-				),
-				schema = config["hive.schema"] as String
-			)
-	}
 
 	override fun configureMapping(): FactMapping =
 		listOf(
 			TableFact::class.java to { TableHandler(this, hive) },
 			SchemaFact::class.java to { SchemaHandler(hive) }
 		)
+
 }
 
 
