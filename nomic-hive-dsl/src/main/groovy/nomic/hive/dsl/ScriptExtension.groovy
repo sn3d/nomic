@@ -12,9 +12,16 @@ class ScriptExtension {
     }
 
     static void hive(final NomicBaseScriptEx self, String hiveSchema, @DelegatesTo(HiveContext) Closure c) {
-        def context = new HiveContext(script: self, hiveSchema: hiveSchema);
+        def context = new HiveContext(self, hiveSchema, false);
         c.delegate = context;
         c.call();
     }
+
+    static void hive(final NomicBaseScriptEx self, String hiveSchema, boolean keepIt, @DelegatesTo(HiveContext) Closure c) {
+        def context = new HiveContext(self, hiveSchema, keepIt);
+        c.delegate = context;
+        c.call();
+    }
+
 
 }

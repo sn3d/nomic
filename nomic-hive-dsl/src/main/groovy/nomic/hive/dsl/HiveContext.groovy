@@ -11,6 +11,12 @@ class HiveContext {
     private NomicBaseScriptEx script;
     private Map<String, ?> fields = new HashMap<>();
 
+    HiveContext(NomicBaseScriptEx script, String hiveSchema, boolean keepIt) {
+        this.hiveSchema = hiveSchema
+        this.script = script
+        schema(hiveSchema).keepIt(keepIt)
+    }
+
     TableBuilder table(String name) {
         def builder = new TableBuilder(schema: hiveSchema, table: name, fields: fields);
         script.registerBuilder(builder);
@@ -29,9 +35,5 @@ class HiveContext {
         def builder = new SchemaBuilder(name: name);
         script.registerBuilder(builder);
         return builder;
-    }
-
-    SchemaBuilder schema() {
-        return schema(hiveSchema);
     }
 }

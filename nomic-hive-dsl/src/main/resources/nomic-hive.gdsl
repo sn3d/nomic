@@ -11,6 +11,13 @@ contribute(globalContext) {
             'c': Closure
     ]
 
+    method name: 'hive', params: [
+            'defaultSchema': String,
+            'keepIt': Boolean,
+            'c': Closure
+    ]
+
+
     def call = enclosingCall("hive")
     if (call) {
         delegatesTo(findClass('nomic.hive.dsl.HiveContext'))

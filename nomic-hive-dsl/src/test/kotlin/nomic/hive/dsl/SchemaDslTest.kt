@@ -36,8 +36,6 @@ class SchemaDslTest {
 
 	@Test
 	fun testSchema() {
-
-
 		val compiler = nomic.compiler.Compiler(expos = listOf(hiveExposer))
 		val facts = compiler.compile(ClasspathScript("/test-schema.box"))
 
@@ -51,8 +49,6 @@ class SchemaDslTest {
 
 	@Test
 	fun testSchemaKeepIt() {
-
-
 		val compiler = nomic.compiler.Compiler(expos = listOf(hiveExposer))
 		val facts = compiler.compile(ClasspathScript("/test-schema-keepit.box"))
 
@@ -61,6 +57,17 @@ class SchemaDslTest {
 				schema = "TEST",
 				keepIt = true
 			));
+	}
+
+	@Test
+	fun `compile several hive blocks and each block should create schema fact`() {
+		val compiler = nomic.compiler.Compiler(expos = listOf(hiveExposer))
+		val facts = compiler.compile(ClasspathScript("/test-schema-block.box"))
+
+		Assertions.assertThat(facts)
+			.contains(SchemaFact(schema = "SCHEMA_1"))
+			.contains(SchemaFact(schema = "SCHEMA_2"))
+			.contains(SchemaFact(schema = "SCHEMA_3", keepIt = true))
 	}
 
 }
