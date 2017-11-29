@@ -13,9 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nomic.app.config
-
-import nomic.core.NomicConfig
+package nomic.core
 
 /**
  * Simple implementation of [NomicConfig] that is mostly used from code. It's good for
