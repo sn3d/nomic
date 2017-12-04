@@ -1,0 +1,6 @@
+name = "test-schema"
+
+
+println this.hiveSchema
+println this.hiveJdbcUrl
+println this.hiveUser

@@ -1,0 +1,9 @@
+def globalContext = context(filetypes: ['box', 'groovy' ])
+
+contribute(globalContext) {
+
+    method name: 'debug', params: [
+            'message': String,
+    ]
+}
+

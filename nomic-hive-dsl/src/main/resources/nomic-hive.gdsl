@@ -2,6 +2,10 @@ def globalContext = context(filetypes: ['box', 'groovy' ])
 
 contribute(globalContext) {
 
+    property name: "hiveSchema",  type: 'String'
+    property name: "hiveJdbcUrl", type: 'String'
+    property name: "hiveUser",    type: 'String'
+
     method name: 'hive', params: [
             'c': Closure
     ]
@@ -16,7 +20,6 @@ contribute(globalContext) {
             'keepIt': Boolean,
             'c': Closure
     ]
-
 
     def call = enclosingCall("hive")
     if (call) {

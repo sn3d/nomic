@@ -1,0 +1,22 @@
+name = "script1"
+group = "nomic-example"
+version = "1.0.0"
+
+debug("Hello global")
+
+
+faction ("group2", dependsOn = "group1") {
+    debug("Hello group 2")
+}
+
+faction ("group4", dependsOn = "group3") {
+    debug("Hello group 4")
+}
+
+faction ("group3", dependsOn = "group1") {
+    debug("Hello group 3")
+}
+
+faction("group1") {
+    debug("Hello group 1")
+}

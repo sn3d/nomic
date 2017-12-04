@@ -1,0 +1,3 @@
+moduleName = nomic-hive-dsl
+moduleVersion = 1.0
+extensionClasses = nomic.dsl.StdExtension

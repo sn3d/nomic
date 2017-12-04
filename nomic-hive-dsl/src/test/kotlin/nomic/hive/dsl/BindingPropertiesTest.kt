@@ -13,33 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nomic.compiler
+package nomic.hive.dsl
 
-import nomic.core.fact.GroupFact
-import nomic.core.fact.ModuleFact
-import nomic.core.fact.NameFact
-import nomic.core.fact.VersionFact
+import nomic.core.Exposable
 import nomic.core.script.ClasspathScript
-import org.assertj.core.api.Assertions.assertThat
+import nomic.hive.SchemaFact
+import org.assertj.core.api.Assertions
 import org.junit.Test
 
 /**
  * @author vrabel.zdenko@gmail.com
  */
-class CompilerTest {
+class BindingPropertiesTest {
+
+	val hiveExposer: Exposable = object : Exposable {
+		override val exposedVariables: List<Pair<String, String>>
+			get() = listOf(
+				"hiveSchema" to "TEST",
+				"hiveJdbcUrl" to "jdbc://hive",
+				"hiveUser" to "test_user"
+			)
+	}
 
 	@Test
-	fun testSimpleCompilation() {
-		val script = ClasspathScript("/script1.box")
-		val facts = Compiler.compile(script)
+	fun `the hive schema, jdbcUrl and user must be exposed`() {
+		val compiler = nomic.compiler.Compiler(expos = listOf(hiveExposer))
+		val facts = compiler.compile(ClasspathScript("/test-properties.box"))
 
-		assertThat(facts)
-			.contains(
-				NameFact("script1"),
-				GroupFact("nomic-example"),
-				VersionFact("1.0.0"),
-				ModuleFact("module-a"),
-				ModuleFact("module-b"))
 	}
 
 }

@@ -13,33 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nomic.compiler
+package nomic.stdlib
 
-import nomic.core.fact.GroupFact
-import nomic.core.fact.ModuleFact
-import nomic.core.fact.NameFact
-import nomic.core.fact.VersionFact
 import nomic.core.script.ClasspathScript
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.data.Index
 import org.junit.Test
 
 /**
  * @author vrabel.zdenko@gmail.com
  */
-class CompilerTest {
+class FactionsTest {
 
 	@Test
-	fun testSimpleCompilation() {
-		val script = ClasspathScript("/script1.box")
-		val facts = Compiler.compile(script)
+	fun `compilation of script with groups should create facts in these groups`() {
+		val compiler = nomic.compiler.Compiler()
+		val script = ClasspathScript("/factions_test.box")
+		val facts = compiler.compile(script);
 
 		assertThat(facts)
-			.contains(
-				NameFact("script1"),
-				GroupFact("nomic-example"),
-				VersionFact("1.0.0"),
-				ModuleFact("module-a"),
-				ModuleFact("module-b"))
+			.hasSize(8)
+			.contains(DebugFact("Hello global"), Index.atIndex(3))
+			.contains(DebugFact("Hello group 1"), Index.atIndex(4))
+			.contains(DebugFact("Hello group 4"), Index.atIndex(7))
 	}
+
 
 }

@@ -1,6 +1,6 @@
 package nomic.hive.dsl
 
-import nomic.dsl.NomicBaseScriptEx
+import nomic.dsl.ScriptContext
 
 /**
  * @author vrabel.zdenko@gmail.com
@@ -8,10 +8,10 @@ import nomic.dsl.NomicBaseScriptEx
 class HiveContext {
 
     String hiveSchema;
-    private NomicBaseScriptEx script;
+    private ScriptContext script;
     private Map<String, ?> fields = new HashMap<>();
 
-    HiveContext(NomicBaseScriptEx script, String hiveSchema, boolean keepIt) {
+    HiveContext(ScriptContext script, String hiveSchema, boolean keepIt) {
         this.hiveSchema = hiveSchema
         this.script = script
         schema(hiveSchema).keepIt(keepIt)
