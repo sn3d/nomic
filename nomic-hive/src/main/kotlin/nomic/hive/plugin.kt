@@ -110,12 +110,12 @@ private class TableHandler(private val plugin: HivePlugin, private val hive: Hiv
 private class SchemaHandler(private val hive: HiveAdapter) : FactHandler<SchemaFact> {
 
 	override fun commit(box: BundledBox, fact: SchemaFact) {
-		hive.exec("CREATE SCHEMA ${fact.schema} IF NOT EXIST ")
+		hive.exec("CREATE SCHEMA IF NOT EXISTS ${fact.schema}")
 	}
 
 	override fun rollback(box: InstalledBox, fact: SchemaFact) {
 		if (!fact.keepIt) {
-			hive.exec("DROP SCHEMA IF EXIST ${fact.schema} CASCADE")
+			hive.exec("DROP SCHEMA IF EXISTS ${fact.schema} CASCADE")
 		}
 	}
 
