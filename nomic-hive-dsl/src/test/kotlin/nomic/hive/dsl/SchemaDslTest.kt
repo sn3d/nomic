@@ -42,7 +42,7 @@ class SchemaDslTest {
 		Assertions.assertThat(facts)
 			.contains(SchemaFact(
 				schema = "CUSTOM_SCHEMA",
-				keepIt = false
+				keepIt = true
 			));
 	}
 
