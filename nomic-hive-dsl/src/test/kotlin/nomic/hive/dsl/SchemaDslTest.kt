@@ -69,9 +69,9 @@ class SchemaDslTest {
 		val facts = compiler.compile(ClasspathScript("/test-schema-block.box"))
 
 		Assertions.assertThat(facts)
-			.contains(SchemaFact(schema = "SCHEMA_1"))
-			.contains(SchemaFact(schema = "SCHEMA_2"))
-			.contains(SchemaFact(schema = "SCHEMA_3", keepIt = true))
+			.contains(SchemaFact(schema = "SCHEMA_1", keepIt = true))
+			.contains(SchemaFact(schema = "SCHEMA_2", keepIt = true))
+			.contains(SchemaFact(schema = "SCHEMA_3", keepIt = false))
 	}
 
 }

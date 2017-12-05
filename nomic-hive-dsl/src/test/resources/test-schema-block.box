@@ -4,6 +4,6 @@ hive("SCHEMA_1") {
     schema "SCHEMA_2"
 }
 
-hive("SCHEMA_3", true) {
+hive("SCHEMA_3", keepIt = false) {
 
 }

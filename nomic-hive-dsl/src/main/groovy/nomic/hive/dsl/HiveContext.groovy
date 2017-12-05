@@ -32,7 +32,7 @@ class HiveContext {
     }
 
     SchemaBuilder schema(String name) {
-        def builder = new SchemaBuilder(name: name);
+        def builder = new SchemaBuilder(name: name, keepIt: true);
         script.registerBuilder(builder);
         return builder;
     }
