@@ -60,7 +60,7 @@ class RealHdfs private constructor(conf: Configuration) : HdfsAdapter {
     override fun create(path: String): OutputStream {
 		val hdfsPath = HadoopPath(path)
 		if (!hdfs.exists(hdfsPath.parent)) {
-			hdfs.mkdirs(hdfsPath)
+			hdfs.mkdirs(hdfsPath.parent)
 		}
 		return hdfs.create(HadoopPath(path)) ?: throw WtfException()
 	}
