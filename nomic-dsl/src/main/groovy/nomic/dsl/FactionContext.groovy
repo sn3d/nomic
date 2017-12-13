@@ -91,7 +91,7 @@ class FactionContext implements ScriptContext {
 
     @Override
     String getNameNode() {
-        return script.getUser()
+        return script.getNameNode()
     }
 
 
