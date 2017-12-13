@@ -40,7 +40,7 @@ public class RestOozieAdapterTest {
 
 			var json = RestOozieAdapterTest::class.java.getResourceAsStream("/oozie-coordinator-resp.json").reader().readText()
 			oozieServer.stubFor(
-				get(urlEqualTo("/oozie/v1/jobs?jobtype=coord&filter=status=RUNNING"))
+				get(urlEqualTo("/oozie/v1/jobs?jobtype=coord&filter=status=WAITING;status=READY;status=SUBMITTED;status=RUNNING;status=SUSPENDED;"))
 					.willReturn(okJson(json))
 			)
 
