@@ -33,7 +33,7 @@ class RestOozieAdapter(val oozieUrl: String = "http://localhost:11000") : OozieA
 	 */
 	override fun findRunningCoordinatorJobs(filter: (OozieJob) -> Boolean): List<OozieJob> {
 		val json =
-			Unirest.get("${oozieUrl}/oozie/v1/jobs?jobtype=coord&filter=status=WAITING;status=READY;status=SUBMITTED;status=RUNNING;status=SUSPENDED;")
+			Unirest.get("${oozieUrl}/oozie/v1/jobs?jobtype=coord&filter=status=PREP;status=RUNNING;status=PREPSUSPENDED;status=SUSPENDED;status=PREPPAUSED;status=PAUSED;")
 				.header("Content-Type", "application/json")
 				.asJson()
 

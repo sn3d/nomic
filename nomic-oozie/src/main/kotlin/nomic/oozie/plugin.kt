@@ -60,8 +60,7 @@ class CoordinatorFactHandler(private val oozie: OozieAdapter, private val hdfs: 
 	 * commiting the [CoordinatorFact]
 	 */
 	override fun commit(box: BundledBox, fact: CoordinatorFact) {
-		val entry = box.entry(fact.xmlSource) ?: throw CoordinatorXmlNotFoundException(fact.xmlSource, box)
-		hdfs.copyToHdfs(entry, fact.hdfsDest)
+		copyCoordinatorXmlToHfs(box, fact)
 		val enrichedParams = fact.parameters + ("jobTracker" to jobTracker)
 		oozie.createAndStartJob(enrichedParams)
 	}
@@ -77,15 +76,21 @@ class CoordinatorFactHandler(private val oozie: OozieAdapter, private val hdfs: 
 		}
 	}
 
+	private fun copyCoordinatorXmlToHfs(box: BundledBox, fact: CoordinatorFact) {
+		val entry = box.entry(fact.xmlSource) ?: throw CoordinatorXmlNotFoundException(fact.xmlSource, box)
+		hdfs.copyToHdfs(entry, fact.hdfsDest)
+	}
+
 	private fun readCoordinatorXml(fact:CoordinatorFact) =
 		hdfs.open(fact.hdfsDest).use {
 			OozieCoordinatorXml(it)
 		}
 
 	private fun OozieCoordinatorXml.findAndKill() {
-		val job = oozie.findRunningCoordinatorJobs({ job -> job.jobName == appName }).first()
-		oozie.killJob(job.jobId)
-
+		val job = oozie.findRunningCoordinatorJobs({ job -> job.jobName == appName }).firstOrNull()
+		job?.let {
+			oozie.killJob(job.jobId)
+		}
 	}
 
 }
