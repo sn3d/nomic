@@ -13,32 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nomic.app.config
+package nomic.stdlib
 
-import nomic.core.NomicConfig
+import nomic.core.script.ClasspathScript
+import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.data.Index
+import org.junit.Test
 
 /**
- * Simple implementation of [NomicConfig] that is mostly used from code. It's good for
- * testing.
- *
- * example:
- * ```
- * val nomic = NomicApp(
- * 		config = SimpleConfig(
- * 			"nomic.user" to "customuser",
- * 			"nomic.home" to "customhome"
- * 			...
- * 		)
- * )
- * ```
  * @author vrabel.zdenko@gmail.com
  */
-class SimpleConfig(private val properties: Map<String, String>) : NomicConfig() {
+class FactionsTest {
 
-	constructor(vararg props: Pair<String, String>) : this(props.toMap())
+	@Test
+	fun `compilation of script with groups should create facts in these groups`() {
+		val compiler = nomic.compiler.Compiler()
+		val script = ClasspathScript("/factions_test.box")
+		val facts = compiler.compile(script);
 
-	/// get the property from [properties]
-	override fun get(name: String): String? =
-		properties[name]
+		assertThat(facts)
+			.hasSize(8)
+			.contains(DebugFact("Hello global"), Index.atIndex(3))
+			.contains(DebugFact("Hello group 1"), Index.atIndex(4))
+			.contains(DebugFact("Hello group 4"), Index.atIndex(7))
+	}
+
 
 }

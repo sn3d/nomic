@@ -28,8 +28,14 @@ In your descriptor scripts, you can also use some useful global variables:
 * **user** username the nomic is using for installation/uploading files into HDFS configured in ``nomic.conf``
 * **homeDir** each used in HDFS might have his own home directory. It's usefull when you want to sandboxing your applications/analyses.
 * **appDir** path to application directory in HDFS where are applications installed. The default value is ``${homeDir}/app``
-* **defaultSchema** contain default HIVE schema that is configure via ``nomic.conf``. Also good if you want to sandboxing your apps.
 * **nameNode** the hostname of Name Node (it's value of ``fs.defaultFS`` parameter in your Hadoop configuration)
+
+Also each module (Hive, Hdfs etc) can expose own parameters.
+
+* **hiveSchema** contain default HIVE schema that is configure via ``nomic.conf``. Also good if you want to sandboxing your apps.
+* **hiveJdbcUrl** value of ``hive.jdbc.url`` in ``nomic.conf`` that is used by Hive facts.
+* **hiveUser** value of ``hive.user`` in ``nomic.conf`` that is used by Hive facts.
+
 
 Modules & dependencies
 ======================
@@ -119,6 +125,51 @@ That can be achieved via ``require`` fact. Let's modify our ``./rfm/nomic.box``:
 
 Now the ``rfm`` module need ``kpi`` first what means the ``kpi`` module will be
 installed first.
+
+Factions
+========
+
+Maybe you realized there is no way how to set order how facts are executed. The
+solution is `faction`. The Factions are small blocks/groups of facts. Each
+faction has own unique ID in box and might depend on another faction.
+
+Let's imagine you want to ensure the resources first and then create some hive
+tables.
+
+.. code-block:: groovy
+
+  group = "mycompany"
+  name = "rfm"
+  version = "1.0.0"
+
+  faction ("resources") {
+    resource 'file-1.csv'
+    resource 'file-2.csv'
+  }
+
+  faction ("hivescripts", dependsOn = "resources") {
+    table 'authors' from "create_authors_table.q"
+  }
+
+
+Everything declared outside the faction blocks is considered as global facts
+and it's executed first. The factions are executed after all these global facts.
+
+.. code-block:: groovy
+
+  group = "mycompany"
+  name = "rfm"
+  version = "1.0.0"
+
+  faction ("resources") {
+    resource 'file-2.csv'
+  }
+
+  resource "file-1.csv"
+
+In this example, the ``file-1.csv`` fact will be applied first even it's declared
+after the faction.
+
 
 Facts
 =====

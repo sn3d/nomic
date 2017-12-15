@@ -74,7 +74,7 @@ class NomicApp : NomicInstance {
 		fun createDefault(config:NomicConfig): NomicApp {
 			val config = TypesafeConfig.loadDefaultConfiguration()
 			val hdfsPlugin = HdfsPlugin.init(config)
-			val hivePlugin = HivePlugin.init(config)
+			val hivePlugin = HivePlugin(config)
 			val ooziePlugin = OoziePlugin.init(config, hdfsPlugin.hdfs)
 			return NomicApp(config, listOf(hdfsPlugin, hivePlugin, ooziePlugin))
 		}
@@ -205,10 +205,12 @@ class NomicApp : NomicInstance {
 			uninstall(dep, force)
 		}
 
-		// send all facts into plugins for rollback
-		for(fact in box.facts) {
-			rollbackFact(box, fact)
-		}
+		// send all facts in reverse order into plugins for rollback
+		box.facts
+			.reversed()
+			.forEach { fact ->
+				rollbackFact(box, fact)
+			}
 
 		db.delete(box.ref())
 	}

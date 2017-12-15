@@ -1,5 +1,9 @@
 name = "test-schema"
 
 hive {
-    schema() keepIt true
+    schema "TEST_1" keepIt true
+}
+
+hive ("TEST_2", keepIt = true) {
+
 }

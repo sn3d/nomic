@@ -1,12 +1,12 @@
 package nomic.oozie.dsl
 
-import nomic.dsl.NomicBaseScriptEx
+import nomic.dsl.ScriptContext
 
 /**
  * @author vrabel.zdenko@gmail.com
  */
 class OozieContext {
-    private NomicBaseScriptEx script;
+    private ScriptContext script;
 
     public CoordinatorBuilder coordinator(String name) {
         String workingDir = script.appDir + "/" + script.group + "/" + script.name

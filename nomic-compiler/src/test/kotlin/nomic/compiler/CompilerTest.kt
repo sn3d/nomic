@@ -15,7 +15,6 @@
  */
 package nomic.compiler
 
-import nomic.core.*
 import nomic.core.fact.GroupFact
 import nomic.core.fact.ModuleFact
 import nomic.core.fact.NameFact

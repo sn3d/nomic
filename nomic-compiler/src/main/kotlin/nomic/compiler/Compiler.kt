@@ -22,6 +22,7 @@ import nomic.core.fact.GroupFact
 import nomic.core.fact.NameFact
 import nomic.core.fact.VersionFact
 import nomic.core.script.FileScript
+import nomic.dsl.FactionContext
 import org.codehaus.groovy.control.CompilerConfiguration
 import org.codehaus.groovy.control.customizers.ImportCustomizer
 
@@ -99,8 +100,9 @@ class Compiler {
 		val shell = setupShell()
 		shell.bindGlobalVariables()
 		shell.evaluate(script)
-		val facts = shell.getAndBuildFacts()
-		return facts;
+		val facts = shell.getGlobalFacts()
+		val factionFacts = shell.getSortedFactionFacts()
+		return facts + factionFacts;
 	}
 
 
@@ -155,7 +157,7 @@ class Compiler {
 	 * retrieve the builders from 'factBuilders' global variable
 	 * and create facts
 	 */
-	private fun GroovyShell.getAndBuildFacts(): List<Fact> {
+	private fun GroovyShell.getGlobalFacts(): List<Fact> {
 		// transform to facts
 		val builders = this.context.variables["factBuilders"] as List<*>? ?: emptyList<Any>()
 		val facts =
@@ -170,4 +172,43 @@ class Compiler {
 
 		return listOf(nameFact, groupFact, versionFact) + facts
 	}
+
+
+	/**
+	 * return a sorted list of facts they're defined in factions. The facts are sorted by
+	 * factions dependencies.
+	 */
+	private fun GroovyShell.getSortedFactionFacts(): List<Fact> {
+		// transform to facts
+		val rawFactions = this.context.variables["factions"] as List<*>? ?: emptyList<Any>()
+		val factions = rawFactions.asSequence().filterIsInstance(FactionContext.Faction::class.java).toList()
+
+		val factionNodes =
+			rawFactions.asSequence()
+				.filterIsInstance(FactionContext.Faction::class.java)
+				.map { faction -> Node<String>(faction.factionId, faction.extractDependencies()) }
+				.toList()
+
+		val sortedNodes = factionNodes.topologySort()
+		val sortedFactions = factions.sortedBy { faction -> sortedNodes.indexOf(faction.factionId) }
+
+		return sortedFactions
+			.flatMap(this@Compiler::createFactorsFromFaction)
+			.toList()
+	}
+
+
+	private fun FactionContext.Faction.extractDependencies() : MutableList<String> =
+		if (this@extractDependencies.dependsOn.isNullOrEmpty()) {
+			mutableListOf()
+		} else {
+			mutableListOf(this.dependsOn)
+		}
+
+
+	private fun createFactorsFromFaction(faction: FactionContext.Faction): List<Fact> =
+		faction
+			.factBuilders
+			.map(FactBuilder::build)
+
 }

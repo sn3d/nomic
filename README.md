@@ -22,6 +22,15 @@ folder. Now you can continue with installation depends on distribution you pick.
 
 The documentation is available [here](http://nomic.readthedocs.io/en/latest).
 
+## For developers
+
+Some useful commands:
+
+- `./gradlew clean build` build and run unit tests. 
+- `./gradlew assemble` build the distribution of Nomic app. The output is in `./nomic-dist/build/distributions` folder.
+- `./gradlew integTest` run integration tests
+- `cd ./docs && make html` build a HTML documentation in `./docs/_build/html` 
+
 ## License
 
    Copyright 2017 vrabel.zdenko@gmail.com

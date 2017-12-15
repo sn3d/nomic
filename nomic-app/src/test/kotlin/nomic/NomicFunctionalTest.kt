@@ -18,7 +18,7 @@ package nomic
 import com.google.common.jimfs.Configuration
 import com.google.common.jimfs.Jimfs
 import nomic.app.NomicApp
-import nomic.app.config.SimpleConfig
+import nomic.core.SimpleConfig
 import nomic.core.*
 import nomic.hdfs.HdfsPlugin
 import nomic.hdfs.ResourceFact

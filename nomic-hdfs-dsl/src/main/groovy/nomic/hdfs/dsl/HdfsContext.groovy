@@ -1,13 +1,14 @@
 package nomic.hdfs.dsl
 
 import nomic.dsl.NomicBaseScriptEx
+import nomic.dsl.ScriptContext
 
 /**
  * @author vrabel.zdenko@gmail.com
  */
 class HdfsContext {
 
-    private def NomicBaseScriptEx script;
+    private def ScriptContext script;
     private def String workingDir;
 
 

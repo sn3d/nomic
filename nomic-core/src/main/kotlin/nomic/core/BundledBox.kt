@@ -59,7 +59,7 @@ open class BundledBox : Box, Bundle {
 	// implemented methods & properties
 	//-------------------------------------------------------------------------------------------------
 
-	override val facts: List<Fact>
+	final override val facts: List<Fact>
 
 	override val name: String
 		get() = facts.findFactType(NameFact::class.java).name

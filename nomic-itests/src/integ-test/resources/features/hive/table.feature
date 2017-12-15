@@ -14,4 +14,3 @@ Feature: Hive 'table'
     When Uninstall the "nomic-examples:hive-advanced:1.0.0" box
     Then table "books" in hive must be removed
     And table "users" in hive must exist
-

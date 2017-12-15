@@ -16,8 +16,6 @@ contribute(globalContext) {
             parameter(name:'version', type:String.name )
     ] ]
 
-
-
     property name: "name", type: 'String'
     property name: "version", type: 'String'
     property name: "group", type: 'String'
@@ -25,6 +23,22 @@ contribute(globalContext) {
     property name: "user", type: 'String'
     property name: "homeDir", type: 'String'
     property name: "appDir", type: 'String'
-    property name: "defaultSchema", type: 'String'
     property name: "nameNode", type: 'String'
+
+    method name: 'faction', params: [
+            'name': String,
+            'c': Closure
+    ]
+
+    method name: 'faction', params: [
+            'name': String,
+            'dependsOn': String,
+            'c': Closure
+    ]
+
+
+    def call = enclosingCall("faction")
+    if (call) {
+        delegatesTo(findClass('nomic.dsl.GroupDecoratorContext'))
+    }
 }

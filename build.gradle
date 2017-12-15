@@ -87,6 +87,23 @@ project('nomic-compiler') {
 	}
 }
 
+project('nomic-stdlib') {
+	dependencies {
+		compile project(':nomic-core')
+		testCompile 'com.google.jimfs:jimfs:1.1'
+	}
+}
+
+project('nomic-stdlib-dsl') {
+	apply plugin: 'groovy'
+	dependencies {
+		compile project(':nomic-dsl')
+		compile project(':nomic-stdlib')
+		compile 'org.codehaus.groovy:groovy:2.4.12'
+		testCompile project(':nomic-compiler')
+
+	}
+}
 
 project('nomic-hdfs') {
 	dependencies {
@@ -176,6 +193,8 @@ project('nomic-app') {
 		compile project(':nomic-core')
 		compile project(':nomic-compiler')
 		compile project(':nomic-dsl')
+		compile project(':nomic-stdlib')
+		compile project(':nomic-stdlib-dsl')
 		compile project(':nomic-hdfs')
 		compile project(':nomic-hdfs-dsl')
 		compile project(':nomic-hive')

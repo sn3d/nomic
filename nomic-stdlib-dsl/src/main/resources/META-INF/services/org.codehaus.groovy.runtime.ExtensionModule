@@ -1,0 +1,3 @@
+moduleName = nomic-stdlib-dsl
+moduleVersion = 1.0
+extensionClasses = nomic.stdlib.dsl.builder.ScriptExtension

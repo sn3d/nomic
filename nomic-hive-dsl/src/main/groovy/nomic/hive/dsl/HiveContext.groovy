@@ -1,6 +1,6 @@
 package nomic.hive.dsl
 
-import nomic.dsl.NomicBaseScriptEx
+import nomic.dsl.ScriptContext
 
 /**
  * @author vrabel.zdenko@gmail.com
@@ -8,8 +8,14 @@ import nomic.dsl.NomicBaseScriptEx
 class HiveContext {
 
     String hiveSchema;
-    private NomicBaseScriptEx script;
+    private ScriptContext script;
     private Map<String, ?> fields = new HashMap<>();
+
+    HiveContext(ScriptContext script, String hiveSchema, boolean keepIt) {
+        this.hiveSchema = hiveSchema
+        this.script = script
+        schema(hiveSchema).keepIt(keepIt)
+    }
 
     TableBuilder table(String name) {
         def builder = new TableBuilder(schema: hiveSchema, table: name, fields: fields);
@@ -26,12 +32,8 @@ class HiveContext {
     }
 
     SchemaBuilder schema(String name) {
-        def builder = new SchemaBuilder(name: name);
+        def builder = new SchemaBuilder(name: name, keepIt: true);
         script.registerBuilder(builder);
         return builder;
-    }
-
-    SchemaBuilder schema() {
-        return schema(hiveSchema);
     }
 }

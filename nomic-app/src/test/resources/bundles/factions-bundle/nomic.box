@@ -1,0 +1,28 @@
+group = "nomic-examples"
+name = "factions-bundle"
+version = "1.0.0"
+
+
+faction("phase2", dependsOn="phase1") {
+    hdfs {
+        resource "phase2.txt"
+    }
+}
+
+faction("phase3", dependsOn="phase2") {
+    hdfs {
+        resource "phase3.txt"
+    }
+}
+
+
+faction("phase1") {
+    hdfs {
+        resource "phase1.txt"
+    }
+}
+
+
+hdfs {
+    resource "global.txt"
+}

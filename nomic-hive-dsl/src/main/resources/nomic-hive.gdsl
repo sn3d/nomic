@@ -2,12 +2,22 @@ def globalContext = context(filetypes: ['box', 'groovy' ])
 
 contribute(globalContext) {
 
+    property name: "hiveSchema",  type: 'String'
+    property name: "hiveJdbcUrl", type: 'String'
+    property name: "hiveUser",    type: 'String'
+
     method name: 'hive', params: [
             'c': Closure
     ]
 
     method name: 'hive', params: [
             'defaultSchema': String,
+            'c': Closure
+    ]
+
+    method name: 'hive', params: [
+            'defaultSchema': String,
+            'keepIt': Boolean,
             'c': Closure
     ]
 
